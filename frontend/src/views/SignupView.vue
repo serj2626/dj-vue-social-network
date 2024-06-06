@@ -77,33 +77,29 @@ export default {
 };
 </script>
 
-
-
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-2 gap-4">
     <div class="main-left">
       <div class="p-12 bg-white border border-gray-200 rounded-lg">
-        <h1 class="mb-6 text-2xl">Sign up</h1>
+        <h1 class="mb-6 text-2xl">Регистрация</h1>
 
         <p class="mb-6 text-gray-500">
-          Lorem ipsum dolor sit mate. Lorem ipsum dolor sit mate. Lorem ipsum
-          dolor sit mate. Lorem ipsum dolor sit mate. Lorem ipsum dolor sit
-          mate. Lorem ipsum dolor sit mate.
+          Для создания аккаунта в системе, введи свое имя,почту и пароль.
         </p>
 
         <p class="font-bold">
-          Already have an account?
+          У вас уже есть аккаунт?
           <RouterLink :to="{ name: 'login' }" class="underline"
-            >Click here</RouterLink
+            >Кликни здесь</RouterLink
           >
-          to log in!
+          для входа!
         </p>
       </div>
     </div>
 
     <div class="main-right">
       <div class="p-12 bg-white border border-gray-200 rounded-lg">
-        <form class="space-y-6" v-on:submit.prevent="submitForm">
+        <form class="space-y-6" @submit.prevent="submitForm">
           <div>
             <label>Name</label><br />
             <input
@@ -152,7 +148,7 @@ export default {
 
           <div>
             <button class="py-4 px-6 bg-purple-600 text-white rounded-lg">
-              Sign up
+              Зарегистрироваться
             </button>
           </div>
         </form>
@@ -160,4 +156,3 @@ export default {
     </div>
   </div>
 </template>
-
