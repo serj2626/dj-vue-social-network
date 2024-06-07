@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "django_extensions",
     # my apps
     "account.apps.AccountConfig",
+    "posts.apps.PostsConfig",
 ]
 
 
