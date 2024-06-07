@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 @api_view(['GET'])
 def me(request):
-    return JsonResponse({
+    return Response({
         'id': request.user.id,
         'name': request.user.name,
         'email': request.user.email

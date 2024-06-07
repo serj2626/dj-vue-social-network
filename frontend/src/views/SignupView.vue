@@ -1,11 +1,9 @@
 <script setup>
 import axios from "axios";
-import { useToastStore } from "@/stores/toast";
 import { ref, onMounted, reactive } from "vue";
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
-const toastStore = useToastStore();
 
 const form = reactive({
   email: "",
@@ -15,33 +13,23 @@ const form = reactive({
 });
 
 const validateForm = () => {
-  if (form.email === "") {
-    toast.error("Ваша почта не может быть пустой");
-
-    return false;
-  }
-
-  if (form.name === "") {
-    toast.error("Ваше имя не может быть пустым");
-
-    return false;
-  }
-
-  if (form.password1 === "") {
-    toast.error("Пароль не может быть пустым");
-
+  if (
+    form.email === "" ||
+    form.name === "" ||
+    form.password1 === "" ||
+    form.password2 === ""
+  ) {
+    toast.error("Обязательные поля не могут быть пустыми");
     return false;
   }
 
   if (form.password1.length < 8) {
     toast.error("Пароль должен содержать не менее 8 символов");
-
     return false;
   }
 
   if (form.password1 !== form.password2) {
     toast.error("Пароли не совпадают");
-
     return false;
   }
 
@@ -64,35 +52,6 @@ const submitForm = async () => {
   }
 };
 </script>
-
-<!-- <script>
-axios
-  .post("/api/signup/", this.form)
-  .then((response) => {
-    console.log("response", response);
-    if (response.statusText) {
-      this.toastStore.showToast(
-        5000,
-        "The user is registered. Please log in",
-        "bg-emerald-500"
-      );
-
-      this.form.email = "";
-      this.form.name = "";
-      this.form.password1 = "";
-      this.form.password2 = "";
-    } else {
-      this.toastStore.showToast(
-        5000,
-        "Something went wrong. Please try again",
-        "bg-red-300"
-      );
-    }
-  })
-  .catch((error) => {
-    console.log("error", error);
-  });
-</script> -->
 
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-2 gap-4">
@@ -157,14 +116,8 @@ axios
             />
           </div>
 
-          <!-- <template v-if="errors.length > 0">
-            <div class="bg-red-300 text-white rounded-lg p-6">
-              <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
-            </div>
-          </template> -->
-
           <div>
-            <button class="py-4 px-6 bg-purple-600 text-white rounded-lg">
+            <button class="py-4 px-6 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
               Зарегистрироваться
             </button>
           </div>

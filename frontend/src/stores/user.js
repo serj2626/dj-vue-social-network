@@ -178,7 +178,7 @@ export const useUserStore = defineStore("user", () => {
             .post("/api/refresh/", {
                 refresh: user.refresh,
             })
-            .then((response) => {
+            .then(response => {
                 user.access = response.data.access;
 
                 localStorage.setItem("user.access", response.data.access);

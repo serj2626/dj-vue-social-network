@@ -4,7 +4,7 @@ import { RouterView } from "vue-router";
 import Toast from "@/components/Toast.vue";
 import { useUserStore } from "@/stores/user";
 import { onBeforeMount } from "vue";
-import NavBar from "@/components/NavBar.vue";
+import Header from "@/components/Header.vue";
 
 
 const userStore = useUserStore();
@@ -28,7 +28,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
- <NavBar />
+ <Header />
 
   <main class="px-8 py-6 bg-gray-100">
     <RouterView />
