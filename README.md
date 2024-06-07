@@ -1,13 +1,13 @@
-<details>
-<summary>Задачи</summary>
+<h1 style="text-align: center;color: #3b82f6">ЗАДАЧИ</h1>
+---
 
 <details>
 <summary>Django</summary>
 
-- [x] Создание Django проекта
-- [x] Создание приложение account
+- [x] Создать Django проект
+- [x] Создать приложение account
+- [x] Создать суперпользователя
 - [x] Переопределить модель пользователя
-- [ ] Неотмеченный пункт
 </details>
 
 <details>
@@ -19,4 +19,4 @@
 - [x] Создание страницы авторизации
 </details>
 
-</details>
+---
