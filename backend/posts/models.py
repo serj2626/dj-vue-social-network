@@ -10,30 +10,34 @@ User = get_user_model()
 
 class PostAttachment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    image = models.ImageField(verbose_name="картинка",
-                              upload_to=get_path_for_post_image)
+    image = models.ImageField(
+        verbose_name="картинка", upload_to=get_path_for_post_image
+    )
     author = models.ForeignKey(
-        User, related_name="post_attachments",
-        on_delete=models.CASCADE, verbose_name="автор"
+        User,
+        related_name="post_attachments",
+        on_delete=models.CASCADE,
+        verbose_name="автор",
     )
 
     class Meta:
         verbose_name = "Прикрепленный файл"
         verbose_name_plural = "Прикрепленные файлы"
 
+
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(verbose_name="текст поста", blank=True, null=True)
 
     attachments = models.ManyToManyField(
-        PostAttachment, blank=True, verbose_name="прикрепленные файлы")
+        PostAttachment, blank=True, verbose_name="прикрепленные файлы"
+    )
 
     # likes
     # likes_count
 
     created_at = models.DateTimeField(verbose_name="дата создания", auto_now_add=True)
-    author = models.ForeignKey(
-        User, related_name="posts", on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Пост"
