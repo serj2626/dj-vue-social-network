@@ -39,12 +39,13 @@ async function submitForm() {
         "Bearer " + res.data.access;
       form.email = "";
       form.password = "";
-      toast.success("Вход выполнен");
+      
 
       await axios
         .get("/api/me/")
         .then((response) => {
           userStore.setUserInfo(response.data);
+          toast.success("Вход выполнен");
           router.push("/feed");
         })
         .catch((error) => {

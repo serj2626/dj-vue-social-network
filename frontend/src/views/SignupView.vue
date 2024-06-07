@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted, reactive } from "vue";
+import { reactive } from "vue";
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
@@ -60,13 +60,13 @@ const submitForm = async () => {
         <h1 class="mb-6 text-2xl">Регистрация</h1>
 
         <p class="mb-6 text-gray-500">
-          Для создания аккаунта в системе, введи свое имя,почту и пароль.
+          Для создания аккаунта в системе, введите свое имя,почту и пароль.
         </p>
 
         <p class="font-bold">
-          У тебя уже есть аккаунт?
+          У вас уже есть аккаунт?
           <RouterLink :to="{ name: 'login' }" class="underline"
-            >Кликни здесь</RouterLink
+            >Кликните здесь</RouterLink
           >
           для входа!
         </p>
@@ -81,7 +81,7 @@ const submitForm = async () => {
             <input
               type="email"
               v-model="form.email"
-              placeholder="Твоя почта"
+              placeholder="Ваше почта"
               class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg"
             />
           </div>
@@ -91,7 +91,7 @@ const submitForm = async () => {
             <input
               type="text"
               v-model="form.name"
-              placeholder="Введи свое имя"
+              placeholder="Введите свое имя"
               class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg"
             />
           </div>
@@ -101,13 +101,13 @@ const submitForm = async () => {
             <input
               type="password"
               v-model="form.password1"
-              placeholder="Введи пароль"
+              placeholder="Введите пароль"
               class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg"
             />
           </div>
 
           <div>
-            <label>Повтори пароль</label><br />
+            <label>Повторите пароль</label><br />
             <input
               type="password"
               v-model="form.password2"

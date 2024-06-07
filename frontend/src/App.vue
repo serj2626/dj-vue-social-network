@@ -6,14 +6,7 @@ import { useUserStore } from "@/stores/user";
 import { onBeforeMount } from "vue";
 import Header from "@/components/Header.vue";
 
-
 const userStore = useUserStore();
-
-// if (token) {
-//   axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-// } else {
-//   axios.defaults.headers.common["Authorization"] = "";
-// }
 
 onBeforeMount(() => {
   userStore.initStore();
@@ -21,14 +14,17 @@ onBeforeMount(() => {
   const token = userStore.user.access;
   if (token) {
     axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+    console.log("token: ", token);
   } else {
     axios.defaults.headers.common["Authorization"] = "";
   }
 });
+
+
 </script>
 
 <template>
- <Header />
+  <Header />
 
   <main class="px-8 py-6 bg-gray-100">
     <RouterView />

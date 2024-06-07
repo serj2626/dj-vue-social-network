@@ -1,5 +1,8 @@
 <script setup>
 import { RouterLink } from "vue-router";
+import { useUserStore } from "@/stores/user";
+
+const userStore = useUserStore();
 </script>
 
 <template>
@@ -7,12 +10,15 @@ import { RouterLink } from "vue-router";
     <div class="max-w-7xl mx-auto">
       <div class="flex items-center justify-between">
         <div class="menu-left">
-          <router-link :to="{ name: 'home' }" class="text-xl"
-            >NaSvyazi</router-link
+          <router-link :to="{ name: 'home' }" class="text-2xl text-gray-500"
+            >Connect</router-link
           >
         </div>
 
-        <div class="menu-center flex space-x-12">
+        <div
+          class="menu-center flex space-x-12"
+          v-if="userStore.user.isAuthenticated"
+        >
           <a href="#" class="text-purple-700">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -83,9 +89,25 @@ import { RouterLink } from "vue-router";
         </div>
 
         <div class="menu-right">
-          <a href="#">
-            <img src="https://i.pravatar.cc/40?img=70" class="rounded-full" />
-          </a>
+          <template v-if="userStore.user.isAuthenticated">
+            <a href="#">
+              <img src="https://i.pravatar.cc/40?img=70" class="rounded-full" />
+            </a>
+          </template>
+          <template v-else>
+            <RouterLink
+              to="{ name: 'login' }"
+              class="mr-4 py-4 px-6 bg-gray-600 hover:bg-gray-700
+               text-white rounded-lg"
+              >Войти</RouterLink
+            >
+            <RouterLink
+              to="{ name: 'signup' }"
+              class="py-4 px-6 bg-purple-600 hover:bg-purple-700
+               text-white rounded-lg"
+              >Зарегистрироваться</RouterLink
+            >
+          </template>
         </div>
       </div>
     </div>
