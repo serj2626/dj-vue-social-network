@@ -1,81 +1,92 @@
-<script>
+<script setup>
 import axios from "axios";
-
 import { useToastStore } from "@/stores/toast";
+import { ref, onMounted, reactive } from "vue";
+import { useToast } from "vue-toastification";
 
-export default {
-  setup() {
-    const toastStore = useToastStore();
+const toast = useToast();
+const toastStore = useToastStore();
 
-    return {
-      toastStore,
-    };
-  },
+const form = reactive({
+  email: "",
+  name: "",
+  password1: "",
+  password2: "",
+});
 
-  data() {
-    return {
-      form: {
-        email: "",
-        name: "",
-        password1: "",
-        password2: "",
-      },
-      errors: [],
-    };
-  },
+const validateForm = () => {
+  if (form.email === "") {
+    toast.error("Ваша почта не может быть пустой");
 
-  methods: {
-    submitForm() {
-      this.errors = [];
+    return false;
+  }
 
-      if (this.form.email === "") {
-        this.errors.push("Your e-mail is missing");
-      }
+  if (form.name === "") {
+    toast.error("Ваше имя не может быть пустым");
 
-      if (this.form.name === "") {
-        this.errors.push("Your name is missing");
-      }
+    return false;
+  }
 
-      if (this.form.password1 === "") {
-        this.errors.push("Your password is missing");
-      }
+  if (form.password1 === "") {
+    toast.error("Пароль не может быть пустым");
 
-      if (this.form.password1 !== this.form.password2) {
-        this.errors.push("The password does not match");
-      }
+    return false;
+  }
 
-      if (this.errors.length === 0) {
-        axios
-          .post("/api/signup/", this.form)
-          .then((response) => {
-            console.log("response", response);
-            if (response.statusText) {
-              this.toastStore.showToast(
-                5000,
-                "The user is registered. Please log in",
-                "bg-emerald-500"
-              );
+  if (form.password1 !== form.password2) {
+    toast.error("Пароли не совпадают");
 
-              this.form.email = "";
-              this.form.name = "";
-              this.form.password1 = "";
-              this.form.password2 = "";
-            } else {
-              this.toastStore.showToast(
-                5000,
-                "Something went wrong. Please try again",
-                "bg-red-300"
-              );
-            }
-          })
-          .catch((error) => {
-            console.log("error", error);
-          });
-      }
-    },
-  },
+    return false;
+  }
+
+  return true;
+};
+
+const submitForm = async () => {
+  if (validateForm()) {
+    try {
+      const res = await axios.post("/api/signup/", { ...form });
+      toast.success("Аккаунт успешно создан");
+      form.email = "";
+      form.name = "";
+      form.password1 = "";
+      form.password2 = "";
+      console.log(res);
+    } catch {
+      toast.error("Ошибка при создании аккаунта");
+    }
+  }
 };
 </script>
+
+<!-- <script>
+axios
+  .post("/api/signup/", this.form)
+  .then((response) => {
+    console.log("response", response);
+    if (response.statusText) {
+      this.toastStore.showToast(
+        5000,
+        "The user is registered. Please log in",
+        "bg-emerald-500"
+      );
+
+      this.form.email = "";
+      this.form.name = "";
+      this.form.password1 = "";
+      this.form.password2 = "";
+    } else {
+      this.toastStore.showToast(
+        5000,
+        "Something went wrong. Please try again",
+        "bg-red-300"
+      );
+    }
+  })
+  .catch((error) => {
+    console.log("error", error);
+  });
+</script> -->
 
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-2 gap-4">
@@ -88,7 +99,7 @@ export default {
         </p>
 
         <p class="font-bold">
-          У вас уже есть аккаунт?
+          У тебя уже есть аккаунт?
           <RouterLink :to="{ name: 'login' }" class="underline"
             >Кликни здесь</RouterLink
           >
@@ -101,50 +112,50 @@ export default {
       <div class="p-12 bg-white border border-gray-200 rounded-lg">
         <form class="space-y-6" @submit.prevent="submitForm">
           <div>
-            <label>Name</label><br />
-            <input
-              type="text"
-              v-model="form.name"
-              placeholder="Your full name"
-              class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg"
-            />
-          </div>
-
-          <div>
-            <label>E-mail</label><br />
+            <label>Почта</label><br />
             <input
               type="email"
               v-model="form.email"
-              placeholder="Your e-mail address"
+              placeholder="Твоя почта"
               class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg"
             />
           </div>
 
           <div>
-            <label>Password</label><br />
+            <label>Имя</label><br />
+            <input
+              type="text"
+              v-model="form.name"
+              placeholder="Введи свое имя"
+              class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg"
+            />
+          </div>
+
+          <div>
+            <label>Пароль</label><br />
             <input
               type="password"
               v-model="form.password1"
-              placeholder="Your password"
+              placeholder="Введи пароль"
               class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg"
             />
           </div>
 
           <div>
-            <label>Repeat password</label><br />
+            <label>Повтори пароль</label><br />
             <input
               type="password"
               v-model="form.password2"
-              placeholder="Repeat your password"
+              placeholder="Введи пароль еще раз"
               class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg"
             />
           </div>
 
-          <template v-if="errors.length > 0">
+          <!-- <template v-if="errors.length > 0">
             <div class="bg-red-300 text-white rounded-lg p-6">
               <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
             </div>
-          </template>
+          </template> -->
 
           <div>
             <button class="py-4 px-6 bg-purple-600 text-white rounded-lg">

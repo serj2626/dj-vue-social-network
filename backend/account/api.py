@@ -3,6 +3,7 @@ from rest_framework.decorators import (
     api_view, authentication_classes, permission_classes
 )
 from .forms import SignupForm
+from rest_framework.response import Response
 
 
 @api_view(['GET'])
@@ -28,11 +29,12 @@ def signup(request):
         'password2': data.get('password2'),
     })
 
+    print("form", form.errors)
+
     if form.is_valid():
         form.save()
-
         # Send verification email later!
     else:
         message = 'error'
 
-    return JsonResponse({'message': message})
+    return Response({'message': message})
