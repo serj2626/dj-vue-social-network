@@ -33,6 +33,12 @@ const validateForm = () => {
     return false;
   }
 
+  if (form.password1.length < 8) {
+    toast.error("Пароль должен содержать не менее 8 символов");
+
+    return false;
+  }
+
   if (form.password1 !== form.password2) {
     toast.error("Пароли не совпадают");
 
