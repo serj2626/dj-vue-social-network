@@ -24,7 +24,7 @@ const submitForm = async () => {
   try {
     const res = await axios.post("/api/posts/", { body: body.value });
     body.value = "";
-    agetFeed();
+    await getFeed();
     toast.success(`Пост успешно создан`);
   } catch {
     toast.error("Произошла ошибка при создании поста");
