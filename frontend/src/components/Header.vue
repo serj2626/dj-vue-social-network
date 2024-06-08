@@ -90,21 +90,21 @@ const userStore = useUserStore();
 
         <div class="menu-right">
           <template v-if="userStore.user.isAuthenticated">
-            <a href="#">
+            <RouterLink
+              :to="{ name: 'profile', params: { id: userStore.user.id } }"
+            >
               <img src="https://i.pravatar.cc/40?img=70" class="rounded-full" />
-            </a>
+            </RouterLink>
           </template>
           <template v-else>
             <RouterLink
               to="{ name: 'login' }"
-              class="mr-4 py-4 px-6 bg-gray-600 hover:bg-gray-700
-               text-white rounded-lg"
+              class="mr-4 py-4 px-6 bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
               >Войти</RouterLink
             >
             <RouterLink
               to="{ name: 'signup' }"
-              class="py-4 px-6 bg-purple-600 hover:bg-purple-700
-               text-white rounded-lg"
+              class="py-4 px-6 bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
               >Зарегистрироваться</RouterLink
             >
           </template>
@@ -113,3 +113,5 @@ const userStore = useUserStore();
     </div>
   </nav>
 </template>
+
+
