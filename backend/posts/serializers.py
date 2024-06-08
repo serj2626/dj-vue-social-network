@@ -14,5 +14,5 @@ class PostSerializer(serializers.ModelSerializer):
             "id",
             "body",
             "author",
-            "created_at",
+            "created_at_formatted",
         )

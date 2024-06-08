@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.timesince import timesince
 
 from .service import get_path_for_post_image
 
@@ -36,16 +37,18 @@ class Post(models.Model):
     # likes
     # likes_count
 
-    created_at = models.DateTimeField(verbose_name="дата создания", auto_now_add=True)
-    author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(
+        verbose_name="дата создания", auto_now_add=True)
+    author = models.ForeignKey(
+        User, related_name="posts", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Пост"
         verbose_name_plural = "Посты"
         ordering = ("-created_at",)
 
-    # def created_at_formatted(self):
-    #     return timesince(self.created_at)
+    def created_at_formatted(self):
+        return timesince(self.created_at)
 
     def __str__(self):
         return f"Post {self.body[:10]}... by {self.author}"
