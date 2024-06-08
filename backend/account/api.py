@@ -1,9 +1,12 @@
 from django.http import JsonResponse
 from rest_framework.decorators import (
-    api_view, authentication_classes, permission_classes
+    api_view,
+    authentication_classes,
+    permission_classes,
 )
-from .forms import SignupForm
 from rest_framework.response import Response
+
+from .forms import SignupForm
 
 
 @api_view(['GET'])

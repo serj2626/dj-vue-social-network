@@ -1,12 +1,17 @@
 from django.contrib import admin
+
 from .models import Post, PostAttachment
 
 
 @admin.register(Post)
-class PosAdmin(admin.ModelAdmin):
-    '''Admin View for Post)'''
+class PostAdmin(admin.ModelAdmin):
+    """Admin View for Post)"""
 
-    list_display = ('attachments', 'created_at', 'author', )
+    list_display = (
+
+        "created_at",
+        "author",
+    )
     # list_filter = ('',)
     # raw_id_fields = ('',)
     # readonly_fields = ('',)
@@ -17,9 +22,12 @@ class PosAdmin(admin.ModelAdmin):
 
 @admin.register(PostAttachment)
 class PostAttachmentAdmin(admin.ModelAdmin):
-    '''Admin View for PostAttachment)'''
+    """Admin View for PostAttachment)"""
 
-    list_display = ('image', 'author', )
+    list_display = (
+        "image",
+        "author",
+    )
     # list_filter = ('',)
     # raw_id_fields = ('',)
     # readonly_fields = ('',)

@@ -1,12 +1,25 @@
 <script setup>
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
-import { ref } from "vue";
+import axios from "axios";
+import { onMounted, ref } from "vue";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
+const posts = ref([]);
+
+const getFeed = async () => {
+  try {
+    const res = await axios.get("/api/posts/");
+    posts.value = res.data;
+    console.log(posts.value);
+  } catch {
+    toast.error("Произошла ошибка при загрузке постов");
+  }
+};
 
 
-
-const name = ref('FeedView');
-
+onMounted(getFeed);
 </script>
 
 <template>
@@ -33,7 +46,7 @@ const name = ref('FeedView');
         <div class="p-4">
           <textarea
             class="p-4 w-full bg-gray-100 rounded-lg"
-            placeholder="What are you thinking about?"
+            placeholder="О чем ты думаешь?"
           ></textarea>
         </div>
 
@@ -41,13 +54,13 @@ const name = ref('FeedView');
           <a
             href="#"
             class="inline-block py-4 px-6 bg-gray-600 text-white rounded-lg"
-            >Attach image</a
+            >Прикрепить изображение</a
           >
 
           <a
             href="#"
             class="inline-block py-4 px-6 bg-purple-600 text-white rounded-lg"
-            >Post</a
+            >Отправить</a
           >
         </div>
       </div>
@@ -70,6 +83,11 @@ const name = ref('FeedView');
           src="https://images.unsplash.com/photo-1661956602868-6ae368943878?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=2670&amp;q=80"
           class="w-full rounded-lg"
         />
+
+        <div class="my-6 flex justify-between"
+        v-for="post in posts" :key="post.id">
+
+        </div>
 
         <div class="my-6 flex justify-between">
           <div class="flex space-x-6">

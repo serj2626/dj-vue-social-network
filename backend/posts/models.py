@@ -48,4 +48,4 @@ class Post(models.Model):
     #     return timesince(self.created_at)
 
     def __str__(self):
-        return f"Post {self.body[:10]} by {self.author}"
+        return f"Post {self.body[:10]}... by {self.author}"
