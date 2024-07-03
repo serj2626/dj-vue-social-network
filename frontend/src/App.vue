@@ -3,12 +3,12 @@ import axios from "axios";
 import { RouterView } from "vue-router";
 import Toast from "@/components/Toast.vue";
 import { useUserStore } from "@/stores/user";
-import { onBeforeMount } from "vue";
+import { onMounted } from "vue";
 import Header from "@/components/Header.vue";
 
 const userStore = useUserStore();
 
-onBeforeMount(() => {
+onMounted(() => {
   userStore.initStore();
 
   const token = userStore.user.access;

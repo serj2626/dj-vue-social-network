@@ -11,7 +11,7 @@ const userStore = useUserStore();
       <div class="flex items-center justify-between">
         <div class="menu-left">
           <router-link :to="{ name: 'home' }" class="text-2xl text-gray-500"
-            >Connect</router-link
+            >ВКоннекте</router-link
           >
         </div>
 
@@ -89,14 +89,14 @@ const userStore = useUserStore();
         </div>
 
         <div class="menu-right">
-          <template v-if="userStore.user.isAuthenticated">
+          <div v-if="userStore.user.isAuthenticated">
             <RouterLink
               :to="{ name: 'profile', params: { id: userStore.user.id } }"
             >
               <img src="https://i.pravatar.cc/40?img=70" class="rounded-full" />
             </RouterLink>
-          </template>
-          <template v-else>
+          </div>
+          <div v-else>
             <RouterLink
               to="{ name: 'login' }"
               class="mr-4 py-4 px-6 bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
@@ -107,7 +107,7 @@ const userStore = useUserStore();
               class="py-4 px-6 bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
               >Зарегистрироваться</RouterLink
             >
-          </template>
+          </div>
         </div>
       </div>
     </div>

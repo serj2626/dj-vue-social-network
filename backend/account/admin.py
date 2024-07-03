@@ -7,4 +7,4 @@ from .models import User
 class UserAdmin(admin.ModelAdmin):
     '''Admin View for User'''
 
-    list_display = ('id', 'email', 'name', 'avatar', )
+    list_display = ('id', 'email', 'name', 'avatar', 'is_superuser' )

@@ -1,9 +1,11 @@
 <script setup>
 import axios from "axios";
 import { reactive } from "vue";
+import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
+const router = useRouter();
 
 const form = reactive({
   email: "",
@@ -45,7 +47,7 @@ const submitForm = async () => {
       form.name = "";
       form.password1 = "";
       form.password2 = "";
-      console.log(res);
+      router.push({name: 'login'})
     } catch {
       toast.error("Ошибка при создании аккаунта");
     }
