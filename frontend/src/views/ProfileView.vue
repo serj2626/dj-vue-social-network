@@ -15,16 +15,16 @@ const toast = useToast();
 const userStore = useUserStore();
 
 const posts = ref([]);
-const user = ref({});
+const user = ref(null);
 const body = ref("");
 
 onMounted(getFeed);
 
 async function getFeed() {
   try {
-    const res = await axios.get(`/api/posts/profile/${id}/`);
-    posts.value = res.data.posts;
-    user.value = res.data.user;
+    const { data } = await axios.get(`/api/posts/profile/${id}/`);
+    posts.value = data;
+    console.log(posts.value);
   } catch {
     toast.error("Произошла ошибка при загрузке постов");
   }
@@ -91,7 +91,7 @@ const submitForm = async () => {
       <div
         class="p-4 bg-white border border-gray-200 rounded-lg"
         v-for="post in posts"
-        v-bind:key="post.id"
+        :key="post.id"
       >
         <FeedItem :post="post" />
       </div>

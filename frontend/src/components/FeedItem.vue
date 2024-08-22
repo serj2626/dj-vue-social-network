@@ -1,6 +1,4 @@
 <script setup>
-import { defineProps } from 'vue';
-
 defineProps({
     post: {
         type: Object,
@@ -16,15 +14,15 @@ defineProps({
             <img src="https://i.pravatar.cc/300?img=70" class="w-[40px] rounded-full">
 
             <p>
-                <strong>
+                <!-- <strong>
                     <RouterLink :to="{ name: 'profile', params: { 'id': post.created_by.id } }">{{ post.created_by.name
                         }}
                     </RouterLink>
-                </strong>
+                </strong> -->
             </p>
         </div>
 
-        <p class="text-gray-600">{{ post.created_at_formatted }} ago</p>
+        <p class="text-gray-600">{{ post.created_at_formatted }} назад</p>
     </div>
 
     <p>{{ post.body }}</p>
