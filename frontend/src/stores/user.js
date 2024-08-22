@@ -25,7 +25,7 @@ export const useUserStore = defineStore("user", () => {
       user.email = localStorage.getItem("user.email");
       user.isAuthenticated = true;
 
-      refreshToken();
+      // refreshToken();
 
       console.log("Initialized user:", user);
     }
