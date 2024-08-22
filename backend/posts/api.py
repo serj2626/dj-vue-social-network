@@ -19,3 +19,11 @@ class PostListViews(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save(author=self.request.user)
         return Response(serializer.data, status=201)
+
+
+class PostListPerUser(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user)

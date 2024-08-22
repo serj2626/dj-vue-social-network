@@ -75,7 +75,7 @@ export const useUserStore = defineStore("user", () => {
     console.log("User", user);
   }
 
-  const refresh = async () => {
+  const refreshToken = async () => {
     try {
       const res = await axios.post("/api/refresh/");
       user.access = res.data.access;
@@ -88,25 +88,25 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
-  function refreshToken() {
-    axios
-      .post("/api/refresh/", {
-        refresh: user.refresh,
-      })
-      .then((response) => {
-        user.access = response.data.access;
+  // function refreshToken() {
+  //   axios
+  //     .post("/api/refresh/", {
+  //       refresh: user.refresh,
+  //     })
+  //     .then((response) => {
+  //       user.access = response.data.access;
 
-        localStorage.setItem("user.access", response.data.access);
+  //       localStorage.setItem("user.access", response.data.access);
 
-        axios.defaults.headers.common["Authorization"] =
-          "Bearer " + response.data.access;
-      })
-      .catch((error) => {
-        console.log(error);
+  //       axios.defaults.headers.common["Authorization"] =
+  //         "Bearer " + response.data.access;
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
 
-        removeToken();
-      });
-  }
+  //       removeToken();
+  //     });
+  // }
 
   return { user, initStore, setToken, removeToken, setUserInfo, refreshToken };
 });

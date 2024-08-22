@@ -48,7 +48,7 @@ const submitForm = async () => {
         <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full" />
 
         <p>
-          <strong>{{ user.name }}</strong>
+          <strong>{{ userStore.user.name }}</strong>
         </p>
 
         <div class="mt-6 flex space-x-8 justify-around">
@@ -61,7 +61,7 @@ const submitForm = async () => {
     <div class="main-center col-span-2 space-y-4">
       <div
         class="bg-white border border-gray-200 rounded-lg"
-        v-if="userStore.user.id === user.id"
+        v-if="userStore.user.id === id"
       >
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">

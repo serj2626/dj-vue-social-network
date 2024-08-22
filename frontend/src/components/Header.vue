@@ -98,12 +98,12 @@ const userStore = useUserStore();
           </div>
           <div v-else>
             <RouterLink
-              to="{ name: 'login' }"
+              :to="{ name: 'login' }"
               class="mr-4 py-4 px-6 bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
               >Войти</RouterLink
             >
             <RouterLink
-              to="{ name: 'signup' }"
+              :to="{ name: 'signup' }"
               class="py-4 px-6 bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
               >Зарегистрироваться</RouterLink
             >
