@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from rest_framework import generics
 
 from .models import Post
@@ -18,7 +17,7 @@ class PostListViews(generics.ListCreateAPIView):
             data=self.request.data, context={'request': self.request})
         serializer.is_valid(raise_exception=True)
         serializer.save(author=self.request.user)
-        return Response(serializer.data, status=201)
+        return Response(serializer.data, status=200)
 
 
 class PostListPerUser(generics.ListAPIView):

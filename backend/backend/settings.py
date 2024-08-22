@@ -42,6 +42,14 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ORIGIN_ALLOW_ALL = True
 
 
+SPECTACULAR_SETTINGS = {
+    "TITLE": "VKonnecte API",
+    "DESCRIPTION": "API for social network app",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    # OTHER SETTINGS
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,6 +64,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "corsheaders",
     "django_extensions",
+    "drf_spectacular",
     # my apps
     "account.apps.AccountConfig",
     "posts.apps.PostsConfig",
