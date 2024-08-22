@@ -69,6 +69,9 @@ INSTALLED_APPS = [
     # my apps
     "account.apps.AccountConfig",
     "posts.apps.PostsConfig",
+    "chat.apps.ChatConfig",
+    "search.apps.SearchConfig",
+    "notifications.apps.NotificationsConfig",
 ]
 
 

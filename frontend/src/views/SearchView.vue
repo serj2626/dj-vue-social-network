@@ -14,13 +14,13 @@ const name = ref("SearchView");
           <input
             type="search"
             class="p-4 w-full bg-gray-100 rounded-lg"
-            placeholder="What are you looking for?"
+            placeholder="Введите имя пользователя?"
           />
 
           <a
             href="#"
             class="inline-block py-4 px-6 bg-purple-600 text-white rounded-lg"
-            >Post</a
+            >Найти</a
           >
         </div>
       </div>
