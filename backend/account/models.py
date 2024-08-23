@@ -33,7 +33,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255, blank=True, null=True, default="")
     avatar = models.ImageField(upload_to="avatars", blank=True, null=True)
-
+    friends = models.ManyToManyField(
+        "self",
+        verbose_name="друзья",
+    )
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -53,3 +56,34 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class FriendshipRequest(models.Model):
+    SENT = 'отправлено'
+    ACCEPTED = 'принято'
+    REJECTED = 'отклонено'
+
+    STATUS_CHOICES = (
+        (SENT, 'Sent'),
+        (ACCEPTED, 'Accepted'),
+        (REJECTED, 'Rejected'),
+    )
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4,
+                          editable=False)
+    created_for = models.ForeignKey(
+        User, related_name='received_friendshiprequests', on_delete=models.CASCADE, verbose_name="получатель")
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name="дата создания")
+    created_by = models.ForeignKey(
+        User, related_name='created_friendshiprequests', on_delete=models.CASCADE, verbose_name="отправитель")
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default=SENT, verbose_name="статус")
+
+    def __str__(self):
+        return f"Запрос на дружбу от {self.created_by} -> {self.created_for}"
+
+    class Meta:
+        verbose_name = "Запрос в друзья"
+        verbose_name_plural = "Запросы в друзья"
+        ordering = ['-created_at']
