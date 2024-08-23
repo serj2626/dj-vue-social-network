@@ -2,11 +2,11 @@
 import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
-import FeedItem from "../components/FeedItem.vue";
 import { useToast } from "vue-toastification";
 import { useUserStore } from "@/stores/user";
 import { onBeforeUpdate, onMounted, onUpdated, reactive, ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
+import PostCard from "@/components/PostCard.vue";
 
 const route = useRoute();
 const toast = useToast();
@@ -112,7 +112,7 @@ watchEffect(() => {
         v-for="post in posts"
         :key="post.id"
       >
-        <FeedItem :post="post" />
+        <PostCard :post="post" />
       </div>
 
       <div
