@@ -4,6 +4,7 @@ from rest_framework.decorators import (
     authentication_classes,
     permission_classes,
 )
+from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 
 from .forms import SignupForm
