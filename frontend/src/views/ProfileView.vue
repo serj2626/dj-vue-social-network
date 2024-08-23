@@ -36,6 +36,10 @@ async function getFeed() {
   }
 }
 
+const sendFriendRequest = async () => {
+  toast.warning("Вы отправляете заявку в друзья");
+}
+
 const submitForm = async () => {
   if (body.value === "") {
     toast.error("Форма не может быть пустой");
@@ -54,7 +58,7 @@ const submitForm = async () => {
 
 
 watchEffect(() => {
-    console.log("watchEffect");
+  console.log("watchEffect");
   getFeed();
 })
 
@@ -65,7 +69,6 @@ watchEffect(() => {
     <div class="main-left col-span-1">
       <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
         <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full" />
-
         <p>
           <strong>{{ user.name }}</strong>
         </p>
@@ -74,51 +77,36 @@ watchEffect(() => {
           <p class="text-xs text-gray-500">182 friends</p>
           <p class="text-xs text-gray-500">120 posts</p>
         </div>
+        <button @click="sendFriendRequest" class="block w-full  mt-6 py-4 px-6 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+          Добавить в друзья
+        </button>
       </div>
+
     </div>
 
     <div class="main-center col-span-2 space-y-4">
-      <div
-        class="bg-white border border-gray-200 rounded-lg"
-        v-if="userStore.user.id === user.id"
-      >
+      <div class="bg-white border border-gray-200 rounded-lg" v-if="userStore.user.id === user.id">
         <form @submit.prevent="submitForm" method="post">
           <div class="p-4">
-            <textarea
-              v-model="body"
-              class="p-4 w-full bg-gray-100 rounded-lg"
-              placeholder="Что нового?"
-            ></textarea>
+            <textarea v-model="body" class="p-4 w-full bg-gray-100 rounded-lg" placeholder="Что нового?"></textarea>
           </div>
 
           <div class="p-4 border-t border-gray-100 flex justify-between">
-            <a
-              href="#"
-              class="inline-block py-4 px-6 bg-gray-600 text-white rounded-lg"
-              >Прикрепить изображение</a
-            >
+            <a href="#" class="inline-block py-4 px-6 bg-gray-600 text-white rounded-lg">Прикрепить изображение</a>
 
-            <button
-              class="inline-block py-4 px-6 bg-purple-600 text-white rounded-lg"
-            >
+            <button class="inline-block py-4 px-6 bg-purple-600 text-white rounded-lg">
               Отправить
             </button>
           </div>
         </form>
       </div>
 
-      <div v-if="posts.length > 0"
-        class="p-4 bg-white border border-gray-200 rounded-lg"
-        v-for="post in posts"
-        :key="post.id"
-      >
+      <div v-if="posts.length > 0" class="p-4 bg-white border border-gray-200 rounded-lg" v-for="post in posts"
+        :key="post.id">
         <PostCard :post="post" />
       </div>
 
-      <div
-        class="p-4 bg-white border border-gray-200 rounded-lg"
-        v-else
-      >
+      <div class="p-4 bg-white border border-gray-200 rounded-lg" v-else>
         <p>Посты не найдены</p>
       </div>
     </div>
