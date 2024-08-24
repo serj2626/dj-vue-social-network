@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     "chat.apps.ChatConfig",
     "search.apps.SearchConfig",
     "notifications.apps.NotificationsConfig",
+    "community.apps.CommunityConfig",
 ]
 
 
