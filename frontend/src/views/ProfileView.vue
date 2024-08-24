@@ -77,9 +77,12 @@ watchEffect(() => {
           <p class="text-xs text-gray-500">182 friends</p>
           <p class="text-xs text-gray-500">120 posts</p>
         </div>
-        <button @click="sendFriendRequest" class="block w-full  mt-6 py-4 px-6 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
-          Добавить в друзья
-        </button>
+
+
+        <UIButton 
+        class="w-full mt-6"
+        :text="`Добавить в друзья`" 
+        @click="sendFriendRequest" />
       </div>
 
     </div>
@@ -94,9 +97,9 @@ watchEffect(() => {
           <div class="p-4 border-t border-gray-100 flex justify-between">
             <a href="#" class="inline-block py-4 px-6 bg-gray-600 text-white rounded-lg">Прикрепить изображение</a>
 
-            <button class="inline-block py-4 px-6 bg-purple-600 text-white rounded-lg">
-              Отправить
-            </button>
+            <UIButton 
+            :text="`Отправить`" 
+            @click="sendFriendRequest" />
           </div>
         </form>
       </div>
