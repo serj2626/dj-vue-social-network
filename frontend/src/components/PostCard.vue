@@ -8,7 +8,7 @@ defineProps({
 
 </script>
 <template>
-    <div class="p-4 bg-white border border-gray-200 rounded-lg">
+    <div class="post p-4 bg-white border border-gray-200 rounded-lg">
         <div class="mb-6 flex items-center justify-between">
           <div class="flex items-center space-x-6">
             <img
@@ -44,7 +44,7 @@ defineProps({
                 ></path>
               </svg>
 
-              <span class="text-gray-500 text-xs">82 likes</span>
+              <span class="text-gray-500 text-xs">82 лайков</span>
             </div>
 
             <div class="flex items-center space-x-2">
@@ -63,7 +63,7 @@ defineProps({
                 ></path>
               </svg>
 
-              <span class="text-gray-500 text-xs">0 comments</span>
+              <span class="text-gray-500 text-xs">0 комментариев</span>
             </div>
           </div>
 
@@ -87,5 +87,11 @@ defineProps({
       </div>
 </template>
 <style scoped>
- 
+ .post{
+  transition: all 0.2s ease-in-out;
+
+  &:hover{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.309);
+  }
+ }
 </style>
