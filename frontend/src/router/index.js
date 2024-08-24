@@ -50,6 +50,12 @@ const router = createRouter({
     },
 
     {
+      path: '/profile/:id/friends',
+      name: 'friends',
+      component: () => import('../views/FriendsView.vue')
+    },
+
+    {
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue')
