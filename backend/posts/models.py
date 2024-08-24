@@ -33,6 +33,16 @@ class Like(models.Model):
     created_at = models.DateTimeField(
         verbose_name="дата создания", auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Лайк"
+        verbose_name_plural = "Лайки"
+        ordering = ["-created_at"]
+
+    def created_at_formatted(self):
+        return timesince(self.created_at)
+
+    def __str__(self):
+        return f"Лайк от {self.created_by}"
 
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
