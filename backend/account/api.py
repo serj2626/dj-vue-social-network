@@ -1,12 +1,14 @@
-from django.http import JsonResponse
 from rest_framework.decorators import (
     api_view,
     authentication_classes,
     permission_classes,
 )
+from rest_framework.generics import CreateAPIView
 from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 
+from .serializers import FriendshipRequestSerializer
+from .models import User, FriendshipRequest
 from .forms import SignupForm
 
 
@@ -42,3 +44,41 @@ def signup(request):
         message = 'error'
 
     return Response({'message': message})
+
+
+@api_view(['POST'])
+def send_friendship_request(request, id):
+    user = User.objects.get(pk=id)
+    return Response({'message': 'friendship request created'})
+
+    # check1 = FriendshipRequest.objects.filter(
+    #     created_for=request.user).filter(created_by=user)
+    # check2 = FriendshipRequest.objects.filter(
+    #     created_for=user).filter(created_by=request.user)
+
+    # if not check1 or not check2:
+    #     friendrequest = FriendshipRequest.objects.create(
+    #         created_for=user, created_by=request.user)
+
+    #     # notification = create_notification(
+    #     #     request, 'new_friendrequest', friendrequest_id=friendrequest.id)
+
+    #     return JsonResponse({'message': 'friendship request created'})
+    # else:
+    #     return JsonResponse({'message': 'request already sent'})
+
+
+# class SendFriendshipRequestView(CreateAPIView):
+#     queryset = FriendshipRequest.objects.all()
+#     serializer_class = FriendshipRequestSerializer
+
+#     def create(self, request, *args, **kwargs):
+#         pk = self.kwargs['pk']
+#         user = User.objects.get(pk=pk)
+
+#         check1 = FriendshipRequest.objects.filter(
+#             created_for=request.user).filter(created_by=user)
+#         check2 = FriendshipRequest.objects.filter(
+#             created_for=user).filter(created_by=request.user)
+
+#         if not check1 or not check2:
