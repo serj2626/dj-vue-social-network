@@ -118,4 +118,6 @@ const userStore = useUserStore();
 .router-link-exact-active {
   @apply text-purple-700;
 }
+
+
 </style>
