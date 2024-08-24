@@ -1,6 +1,13 @@
 from django.contrib import admin
 
-from .models import Post, PostAttachment
+from .models import Post, PostAttachment, Like
+
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    '''Admin View for Like'''
+
+    list_display = ('created_by', 'created_at')
 
 
 @admin.register(Post)
