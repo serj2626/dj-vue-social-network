@@ -26,6 +26,14 @@ class PostAttachment(models.Model):
         verbose_name_plural = "Прикрепленные файлы"
 
 
+class Like(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_by = models.ForeignKey(
+        User, related_name="likes", on_delete=models.CASCADE, verbose_name="автор")
+    created_at = models.DateTimeField(
+        verbose_name="дата создания", auto_now_add=True)
+
+
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(verbose_name="текст поста", blank=True, null=True)
@@ -34,11 +42,14 @@ class Post(models.Model):
         PostAttachment, blank=True, verbose_name="прикрепленные файлы"
     )
 
-    # likes
-    # likes_count
+    likes = models.ManyToManyField(Like, blank=True, verbose_name="лайки")
+    likes_count = models.IntegerField(
+        verbose_name="количество лайков", default=0)
 
-    created_at = models.DateTimeField(verbose_name="дата создания", auto_now_add=True)
-    author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(
+        verbose_name="дата создания", auto_now_add=True)
+    author = models.ForeignKey(
+        User, related_name="posts", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Пост"
