@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from account.serializers import UserSerializer
 
-from .models import Post, PostAttachment
+from .models import Post
 
 
 class PostSerializer(serializers.ModelSerializer):

@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.db import models
 from django.utils import timezone
-from django.utils.timesince import timesince
+
 
 class CustomUserManager(UserManager):
     def _create_user(self, name, email, password, **extra_fields):
@@ -59,26 +59,33 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class FriendshipRequest(models.Model):
-    SENT = 'отправлено'
-    ACCEPTED = 'принято'
-    REJECTED = 'отклонено'
+    SENT = "отправлено"
+    ACCEPTED = "принято"
+    REJECTED = "отклонено"
 
     STATUS_CHOICES = (
-        (SENT, 'Sent'),
-        (ACCEPTED, 'Accepted'),
-        (REJECTED, 'Rejected'),
+        (SENT, "Sent"),
+        (ACCEPTED, "Accepted"),
+        (REJECTED, "Rejected"),
     )
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                          editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_for = models.ForeignKey(
-        User, related_name='received_friendshiprequests', on_delete=models.CASCADE, verbose_name="получатель")
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name="дата создания")
+        User,
+        related_name="received_friendshiprequests",
+        on_delete=models.CASCADE,
+        verbose_name="получатель",
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="дата создания")
     created_by = models.ForeignKey(
-        User, related_name='created_friendshiprequests', on_delete=models.CASCADE, verbose_name="отправитель")
+        User,
+        related_name="created_friendshiprequests",
+        on_delete=models.CASCADE,
+        verbose_name="отправитель",
+    )
     status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default=SENT, verbose_name="статус")
+        max_length=20, choices=STATUS_CHOICES, default=SENT, verbose_name="статус"
+    )
 
     def __str__(self):
         return f"Запрос на дружбу от {self.created_by} -> {self.created_for}"
@@ -86,8 +93,7 @@ class FriendshipRequest(models.Model):
     class Meta:
         verbose_name = "Запрос в друзья"
         verbose_name_plural = "Запросы в друзья"
-        ordering = ['-created_at']
-
+        ordering = ["-created_at"]
 
 
 # class Community(models.Model):

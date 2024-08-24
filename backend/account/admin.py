@@ -1,20 +1,25 @@
 from django.contrib import admin
 
-from .models import User, FriendshipRequest
+from .models import FriendshipRequest, User
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    '''Admin View for User'''
+    """Admin View for User"""
 
-    list_display = ('id', 'email', 'name', 'avatar', 'is_superuser' )
+    list_display = ("id", "email", "name", "avatar", "is_superuser")
 
 
 @admin.register(FriendshipRequest)
 class FriendshipRequestAdmin(admin.ModelAdmin):
-    '''Admin View for FriendshipRequest)'''
+    """Admin View for FriendshipRequest)"""
 
-    list_display = ( 'created_for', 'created_at', 'created_by', 'status', )
+    list_display = (
+        "created_for",
+        "created_at",
+        "created_by",
+        "status",
+    )
     # list_filter = ('',)
     # inlines = [
     #     Inline,

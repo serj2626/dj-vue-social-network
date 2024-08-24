@@ -37,10 +37,8 @@ class Post(models.Model):
     # likes
     # likes_count
 
-    created_at = models.DateTimeField(
-        verbose_name="дата создания", auto_now_add=True)
-    author = models.ForeignKey(
-        User, related_name="posts", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(verbose_name="дата создания", auto_now_add=True)
+    author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Пост"

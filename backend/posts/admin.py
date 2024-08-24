@@ -8,14 +8,11 @@ class PostAdmin(admin.ModelAdmin):
     """Admin View for Post)"""
 
     list_display = (
-
         "created_at",
         "author",
     )
 
-    list_editable = (
-        "author",
-    )
+    list_editable = ("author",)
     # list_filter = ('',)
     # raw_id_fields = ('',)
     # readonly_fields = ('',)
