@@ -10,6 +10,7 @@ class PostAdmin(admin.ModelAdmin):
     list_display = (
         "created_at",
         "author",
+        "likes_count"
     )
 
     list_editable = ("author",)
