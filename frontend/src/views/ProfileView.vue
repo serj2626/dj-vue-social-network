@@ -4,7 +4,14 @@ import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import { useToast } from "vue-toastification";
 import { useUserStore } from "@/stores/user";
-import { onBeforeUpdate, onMounted, onUpdated, reactive, ref, watchEffect } from "vue";
+import {
+  onBeforeUpdate,
+  onMounted,
+  onUpdated,
+  reactive,
+  ref,
+  watchEffect,
+} from "vue";
 import { useRoute } from "vue-router";
 import PostCard from "@/components/PostCard.vue";
 
@@ -38,7 +45,7 @@ async function getFeed() {
 
 const sendFriendRequest = async () => {
   toast.warning("Вы отправляете заявку в друзья");
-}
+};
 
 const submitForm = async () => {
   if (body.value === "") {
@@ -56,56 +63,82 @@ const submitForm = async () => {
   }
 };
 
-
 watchEffect(() => {
   console.log("watchEffect");
   getFeed();
-})
-
+});
 </script>
 
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
-      <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
+      <div
+        class="p-4 bg-white border border-gray-200 text-center rounded-lg relative"
+      >
+        <p
+          v-if="userStore.user.id === user.id"
+          class="absolute top-2 right-2 text-xs text-white bg-orange-600 p-2 rounded-md"
+        >
+          Это Вы
+        </p>
         <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full" />
         <p>
           <strong>{{ user.name }}</strong>
         </p>
 
         <div class="mt-6 flex space-x-8 justify-around">
-          <p class="text-xs text-gray-500">182 friends</p>
-          <p class="text-xs text-gray-500">120 posts</p>
+          <RouterLink :to="{ name: 'friends', params: { id: user.id } }">
+            <p
+              class="text-xs text-gray-500 transition-all duration-100 ease-in hover:text-gray-900 "
+            >
+              182 друзей
+            </p>
+          </RouterLink>
+
+          <p class="text-xs text-gray-500">120 постов</p>
         </div>
 
-
-        <UIButton 
-        class="w-full mt-6"
-        :text="`Добавить в друзья`" 
-        @click="sendFriendRequest" />
+        <UIButton
+        v-if="userStore.user.id !== user.id"
+          class="w-full mt-6"
+          :text="`Добавить в друзья`"
+          @click="sendFriendRequest"
+        />
       </div>
-
     </div>
 
     <div class="main-center col-span-2 space-y-4">
-      <div class="bg-white border border-gray-200 rounded-lg" v-if="userStore.user.id === user.id">
+      <div
+        class="bg-white border border-gray-200 rounded-lg"
+        v-if="userStore.user.id === user.id"
+      >
         <form @submit.prevent="submitForm" method="post">
           <div class="p-4">
-            <textarea v-model="body" class="p-4 w-full bg-gray-100 rounded-lg" placeholder="Что нового?"></textarea>
+            <textarea
+              v-model="body"
+              class="p-4 w-full bg-gray-100 rounded-lg"
+              placeholder="Что нового?"
+            ></textarea>
           </div>
 
           <div class="p-4 border-t border-gray-100 flex justify-between">
-            <a href="#" class="inline-block py-4 px-6 bg-gray-600 text-white rounded-lg">Прикрепить изображение</a>
+            <a
+              href="#"
+              class="inline-block py-4 px-6 bg-gray-600 hover:bg-gray-700 transition-all duration-100 ease-in text-white rounded-lg"
+              >Прикрепить изображение</a
+            >
 
-            <UIButton 
-            :text="`Отправить`" 
-            @click="sendFriendRequest" />
+            <UIButton :text="`Отправить`"  />
           </div>
         </form>
       </div>
 
-      <div v-if="posts.length > 0" class="p-4 bg-white border border-gray-200 rounded-lg" v-for="post in posts"
-        :key="post.id">
+      <div
+        v-if="posts.length > 0"
+        class="p-4 bg-white border border-gray-200 rounded-lg"
+        v-for="post in posts"
+        :key="post.id"
+      >
         <PostCard :post="post" />
       </div>
 
