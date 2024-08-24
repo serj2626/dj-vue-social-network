@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.db import models
 from django.utils import timezone
-
+from django.utils.timesince import timesince
 
 class CustomUserManager(UserManager):
     def _create_user(self, name, email, password, **extra_fields):
@@ -87,3 +87,30 @@ class FriendshipRequest(models.Model):
         verbose_name = "Запрос в друзья"
         verbose_name_plural = "Запросы в друзья"
         ordering = ['-created_at']
+
+
+
+# class Community(models.Model):
+#     title = models.CharField(max_length=255, verbose_name="название сообщества")
+#     description = models.TextField(blank=True, null=True, verbose_name="описание")
+#     avatar = models.ImageField(upload_to="communities", blank=True, null=True)
+#     author = models.ForeignKey(
+#         User, related_name="communities", on_delete=models.CASCADE
+#     )
+#     users = models.ManyToManyField(
+#         User, verbose_name="участники", related_name="my_communities"
+#     )
+#     created_at = models.DateTimeField(
+#         verbose_name="дата создания", auto_now_add=True
+#     )
+
+#     class Meta:
+#         verbose_name = "Сообщество"
+#         verbose_name_plural = "Сообщества"
+#         ordering = ["-created_at"]
+
+#     def created_at_formatted(self):
+#         return timesince(self.created_at)
+
+#     def __str__(self):
+#         return self.title
