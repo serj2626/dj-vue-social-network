@@ -7,7 +7,7 @@ import App from './App.vue'
 import router from './router'
 import Toast from "vue-toastification";
 import 'vue-toastification/dist/index.css';
-
+import globalComponents from "@/components/global";
 
 axios.defaults.baseURL = 'http://localhost:8000'
 
@@ -18,6 +18,7 @@ const app = createApp(App)
 
 app
     .use(createPinia())
+    .use(globalComponents)
     .use(Toast, {
         transition: "Vue-Toastification__bounce",
         newestOnTop: true,
