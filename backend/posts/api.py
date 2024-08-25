@@ -8,8 +8,8 @@ from rest_framework.views import APIView
 from account.models import User
 from account.serializers import UserSerializer
 
-from .models import Like, Post
-from .serializers import PostSerializer
+from .models import Comment, Like, Post
+from .serializers import PostDetailSerializer, PostSerializer
 
 
 class PostListView(generics.ListCreateAPIView):
@@ -18,7 +18,8 @@ class PostListView(generics.ListCreateAPIView):
     permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
-        self.get_serializer(data=self.request.data, context={"request": self.request})
+        self.get_serializer(data=self.request.data, context={
+                            "request": self.request})
         serializer.is_valid(raise_exception=True)
         serializer.save(author=self.request.user)
         return Response(serializer.data, status=201)
@@ -47,8 +48,7 @@ class PostListProfileView(APIView):
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    lookup_field = "id"
+    serializer_class = PostDetailSerializer
 
     @extend_schema(summary="Просмотр поста по id")
     def get(self, request, *args, **kwargs):
@@ -59,9 +59,7 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
             is_liked = True
         else:
             is_liked = False
-        return Response({"post": PostSerializer(post).data, "is_liked": is_liked})
-
-        return super().get(request, *args, **kwargs)
+        return Response({"post": self.get_serializer(post).data, "is_liked": is_liked})
 
     @extend_schema(summary="Редактирование поста по id")
     def put(self, request, *args, **kwargs):
@@ -76,19 +74,35 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
         return super().patch(request, *args, **kwargs)
 
 
+@extend_schema(summary="Создание комментария к посту")
+@api_view(['POST'])
+def post_create_comment(request, pk):
+    comment = Comment.objects.create(
+        body=request.data.get('body'), author=request.user)
+
+    post = Post.objects.get(pk=pk)
+    post.comments.add(comment)
+    post.comments_count += 1
+    post.save()
+
+    return Response({"msg": "Комментарий успешно создан"}, status=201)
+
+
+@extend_schema(summary="Добавление или удаление лайка к посту")
 @api_view(["POST"])
 def toggle_like(request, pk):
+
     post = Post.objects.get(pk=pk)
 
     if not post.likes.filter(created_by=request.user):
         like = Like.objects.create(created_by=request.user)
-        post.likes_count = post.likes_count + 1
+        post.likes_count += 1
         post.likes.add(like)
         post.save()
         return Response({"msg": "Вы поставили лайк"}, status=201)
     else:
         like = Like.objects.get(created_by=request.user)
-        post.likes_count = post.likes_count - 1
+        post.likes_count -= 1
         post.likes.remove(like)
         like.delete()
         post.save()
