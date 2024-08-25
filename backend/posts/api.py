@@ -13,6 +13,10 @@ from .serializers import PostDetailSerializer, PostSerializer
 
 
 class PostListView(generics.ListCreateAPIView):
+    """
+    Список постов
+    """
+    
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [AllowAny]
