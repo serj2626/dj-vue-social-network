@@ -4,7 +4,7 @@ from rest_framework.decorators import (
     permission_classes,
 )
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
+
 from .forms import SignupForm
 from .models import FriendshipRequest, User
 from .serializers import FriendshipRequestSerializer, UserSerializer
