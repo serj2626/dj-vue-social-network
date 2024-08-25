@@ -1,37 +1,38 @@
 from django.contrib import admin
 
-from .models import Post, PostAttachment, Like
+from .models import Like, Post, PostAttachment
 
 
 @admin.register(Like)
 class LikeAdmin(admin.ModelAdmin):
-    '''Admin View for Like'''
+    """Admin View for Like"""
 
-    list_display = ('created_by', 'created_at')
+    list_display = ("created_by", "created_at")
 
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    """Admin View for Post)"""
+    """Admin View for Post"""
 
     list_display = (
+        "id",
         "created_at",
         "author",
-        "likes_count"
+        "likes_count",
+        "get_body",
     )
 
     list_editable = ("author", "likes_count")
-    # list_filter = ('',)
-    # raw_id_fields = ('',)
-    # readonly_fields = ('',)
-    # search_fields = ('',)
-    # date_hierarchy = ''
-    # ordering = ('',)
+
+    def get_body(self, obj):
+        return obj.body[:10]
+
+    get_body.short_description = "Текст поста"
 
 
 @admin.register(PostAttachment)
 class PostAttachmentAdmin(admin.ModelAdmin):
-    """Admin View for PostAttachment)"""
+    """Admin View for PostAttachment"""
 
     list_display = (
         "image",
