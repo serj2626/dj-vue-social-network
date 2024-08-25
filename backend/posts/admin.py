@@ -1,7 +1,18 @@
 from django.contrib import admin
 
-from .models import Like, Post, PostAttachment
+from .models import Like, Post, PostAttachment, Comment
 
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    """Admin View for Comment"""
+
+    list_display = ("id", "created_at", "created_by", "get_body") 
+
+    def get_body(self, obj):
+        return obj.body[:26]
+
+    get_body.short_description = "Текст комментария"
 
 @admin.register(Like)
 class LikeAdmin(admin.ModelAdmin):
