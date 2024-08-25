@@ -19,6 +19,7 @@ const post = reactive({
   body: "",
   created_at_formatted: "",
   likes_count: 0,
+  comments_count: 0,
 });
 const author = reactive({
   name: "",
@@ -37,7 +38,10 @@ const getPost = async () => {
     post.body = data.post.body;
     post.created_at_formatted = data.post.created_at_formatted;
     post.likes_count = data.post.likes_count;
+    post.comments_count = data.post.comments_count;
+
     isLiked.value = data.is_liked;
+    console.log(data);
   } catch (e) {
     toast.error("Произошла ошибка при загрузке поста");
   }
@@ -113,7 +117,7 @@ watchEffect(() => {
           <span 
           @click="$router.push({ name: 'post', params: { id: post.id } })"
           class="text-gray-500 text-xs hover:font-bold hover:text-gray-800 transition-all duration-100 ease-in cursor-pointer">
-            0 комментариев
+            {{ post.comments_count }} комментариев
           </span>
         </div>
       </div>
