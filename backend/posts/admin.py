@@ -31,10 +31,11 @@ class PostAdmin(admin.ModelAdmin):
         "created_at",
         "author",
         "likes_count",
+        "comments_count",
         
     )
 
-    list_editable = ("author", "likes_count")
+    list_editable = ("author", "likes_count", "comments_count")
 
     def get_body(self, obj):
         return obj.body[:10]
