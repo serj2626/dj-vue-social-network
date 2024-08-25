@@ -46,12 +46,12 @@ class PostListProfileView(APIView):
         return Response({"posts": posts_serializer.data, "user": user_serializer.data})
 
 
-class ToggleLikeForPostView(generics.UpdateAPIView):
+class ToggleLikeForPostView(generics.CreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
     @extend_schema(summary="Добавление лайка к посту")
-    def patch(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         post = Post.objects.get(id=self.kwargs["pk"])
         likes = post.likes.filter(created_by=self.request.user)
         if likes.exists():
@@ -61,7 +61,7 @@ class ToggleLikeForPostView(generics.UpdateAPIView):
             like.delete()
             post.save()
 
-            return Response({"msg": "Вы успешно удалили свой лайк"}, status=200)
+            return Response({"msg": "Вы успешно удалили свой лайк"}, status=204)
         
         new_like = Like.objects.create(created_by=self.request.user)
         post.likes.add(new_like)

@@ -14,7 +14,7 @@ onMounted(() => {
   const token = userStore.user.access;
   if (token) {
     axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-    console.log("token: ", token);
+    // console.log("token: ", token);
   } else {
     axios.defaults.headers.common["Authorization"] = "";
   }

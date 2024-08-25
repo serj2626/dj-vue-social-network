@@ -13,10 +13,10 @@ export const useUserStore = defineStore("user", () => {
   });
 
   function initStore() {
-    console.log("initStore", localStorage.getItem("user.access"));
+    // console.log("initStore", localStorage.getItem("user.access"));
 
     if (localStorage.getItem("user.access")) {
-      console.log("User has access!");
+      // console.log("User has access!");
 
       user.access = localStorage.getItem("user.access");
       user.refresh = localStorage.getItem("user.refresh");
@@ -27,7 +27,7 @@ export const useUserStore = defineStore("user", () => {
 
       // refreshToken();
 
-      console.log("Initialized user:", user);
+      // console.log("Initialized user:", user);
     }
   }
 

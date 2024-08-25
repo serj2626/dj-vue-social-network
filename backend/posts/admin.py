@@ -20,7 +20,7 @@ class PostAdmin(admin.ModelAdmin):
         "likes_count"
     )
 
-    list_editable = ("author",)
+    list_editable = ("author", "likes_count")
     # list_filter = ('',)
     # raw_id_fields = ('',)
     # readonly_fields = ('',)
