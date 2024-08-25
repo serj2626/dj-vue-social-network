@@ -1,5 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics
+from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,7 +8,7 @@ from rest_framework.views import APIView
 from account.models import User
 from account.serializers import UserSerializer
 
-from .models import Post, Like
+from .models import Like, Post
 from .serializers import PostSerializer
 
 
@@ -17,8 +18,7 @@ class PostListView(generics.ListCreateAPIView):
     permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
-        self.get_serializer(data=self.request.data, context={
-                            "request": self.request})
+        self.get_serializer(data=self.request.data, context={"request": self.request})
         serializer.is_valid(raise_exception=True)
         serializer.save(author=self.request.user)
         return Response(serializer.data, status=201)
@@ -46,26 +46,74 @@ class PostListProfileView(APIView):
         return Response({"posts": posts_serializer.data, "user": user_serializer.data})
 
 
-class ToggleLikeForPostView(generics.CreateAPIView):
-    serializer_class = PostSerializer
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    lookup_field = "id"
 
-    @extend_schema(summary="Добавление лайка к посту")
-    def post(self, request, *args, **kwargs):
+    @extend_schema(summary="Просмотр поста по id")
+    def get(self, request, *args, **kwargs):
+        current_user = self.request.user
         post = Post.objects.get(id=self.kwargs["pk"])
-        likes = post.likes.filter(created_by=self.request.user)
-        if likes.exists():
-            like = Like.objects.get(created_by=self.request.user)
-            post.likes.remove(like)
-            post.likes_count -= 1
-            like.delete()
-            post.save()
 
-            return Response({"msg": "Вы успешно удалили свой лайк"}, status=204)
-        
-        new_like = Like.objects.create(created_by=self.request.user)
-        post.likes.add(new_like)
-        post.likes_count += 1
+        if post.likes.filter(created_by=current_user).exists():
+            is_liked = True
+        else:
+            is_liked = False
+        return Response({"post": PostSerializer(post).data, "is_liked": is_liked})
+
+    @extend_schema(summary="Редактирование поста по id")
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+    @extend_schema(summary="Удаление поста по id")
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
+
+    @extend_schema(summary="Частичное редактирование поста по id")
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
+
+
+@api_view(["POST"])
+def toggle_like(request, pk):
+    post = Post.objects.get(pk=pk)
+
+    if not post.likes.filter(created_by=request.user):
+        like = Like.objects.create(created_by=request.user)
+        post.likes_count = post.likes_count + 1
+        post.likes.add(like)
         post.save()
-
         return Response({"msg": "Вы поставили лайк"}, status=201)
+    else:
+        like = Like.objects.get(created_by=request.user)
+        post.likes_count = post.likes_count - 1
+        post.likes.remove(like)
+        like.delete()
+        post.save()
+        return Response({"msg": "Вы успешно удалили свой лайк"}, status=204)
+
+
+# class ToggleLikeForPostView(generics.CreateAPIView):
+#     serializer_class = PostSerializer
+#     queryset = Post.objects.all()
+
+#     @extend_schema(summary="Добавление лайка к посту")
+#     def post(self, request, *args, **kwargs):
+#         post = Post.objects.get(id=self.kwargs["pk"])
+#         likes = post.likes.filter(created_by=self.request.user)
+#         if likes.exists():
+#             like = Like.objects.get(created_by=self.request.user)
+#             post.likes.remove(like)
+#             post.likes_count -= 1
+#             like.delete()
+#             post.save()
+
+#             return Response({"msg": "Вы успешно удалили свой лайк"}, status=204)
+
+#         new_like = Like.objects.create(created_by=self.request.user)
+#         post.likes.add(new_like)
+#         post.likes_count += 1
+#         post.save()
+
+#         return Response({"msg": "Вы поставили лайк"}, status=201)

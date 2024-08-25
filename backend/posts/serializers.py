@@ -7,14 +7,8 @@ from .models import Post
 
 class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-
+    likes_count = serializers.IntegerField(source="likes.count", read_only=True)
 
     class Meta:
         model = Post
-        fields = (
-            "id",
-            "body",
-            "author",
-            "created_at_formatted",
-            "likes_count"
-        )
+        fields = ("id", "body", "author", "created_at_formatted", "likes_count")
