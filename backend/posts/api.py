@@ -18,8 +18,7 @@ class PostListView(generics.ListCreateAPIView):
     permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
-        self.get_serializer(data=self.request.data, context={
-                            "request": self.request})
+        self.get_serializer(data=self.request.data, context={"request": self.request})
         serializer.is_valid(raise_exception=True)
         serializer.save(author=self.request.user)
         return Response(serializer.data, status=201)
@@ -75,10 +74,9 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 @extend_schema(summary="Создание комментария к посту")
-@api_view(['POST'])
+@api_view(["POST"])
 def post_create_comment(request, pk):
-    comment = Comment.objects.create(
-        body=request.data.get('body'), author=request.user)
+    comment = Comment.objects.create(body=request.data.get("body"), author=request.user)
 
     post = Post.objects.get(pk=pk)
     post.comments.add(comment)
