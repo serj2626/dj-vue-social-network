@@ -10,6 +10,10 @@ User = get_user_model()
 
 
 class PostAttachment(models.Model):
+    """
+    Модель Прикрепленного файла
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(
         verbose_name="картинка", upload_to=get_path_for_post_image
@@ -27,6 +31,10 @@ class PostAttachment(models.Model):
 
 
 class Like(models.Model):
+    """
+    Модель Лайка
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_by = models.ForeignKey(
         User, related_name="likes", on_delete=models.CASCADE, verbose_name="автор"
@@ -46,6 +54,10 @@ class Like(models.Model):
 
 
 class Comment(models.Model):
+    """
+    Модель Комментария
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(blank=True, null=True, verbose_name="текст комментария")
     author = models.ForeignKey(
@@ -66,6 +78,10 @@ class Comment(models.Model):
 
 
 class Post(models.Model):
+    """
+    Модель Поста
+    """
+    
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(verbose_name="текст поста", blank=True, null=True)
 
