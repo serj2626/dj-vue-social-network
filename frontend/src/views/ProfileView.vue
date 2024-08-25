@@ -5,16 +5,18 @@ import Trends from "../components/Trends.vue";
 import { useToast } from "vue-toastification";
 import { useUserStore } from "@/stores/user";
 import {
+  onMounted,
   reactive,
   ref,
+  watch,
   watchEffect,
 } from "vue";
 import { useRoute } from "vue-router";
 import PostCard from "@/components/PostCard.vue";
 
+
 const route = useRoute();
 const toast = useToast();
-
 const userStore = useUserStore();
 
 const posts = ref([]);
@@ -30,7 +32,6 @@ async function getFeed() {
   try {
     const { data } = await axios.get(`/api/posts/profile/${route.params.id}/`);
     posts.value = data.posts;
-    console.log(data.posts);
     user.id = data.user.id;
     user.name = data.user.name;
     user.email = data.user.email;
@@ -43,7 +44,7 @@ const sendFriendRequest = async () => {
   toast.warning("Вы отправляете заявку в друзья");
 };
 
-const submitForm = async () => {
+const createPost = async () => {
   if (body.value === "") {
     toast.error("Форма не может быть пустой");
     return;
@@ -59,18 +60,17 @@ const submitForm = async () => {
   }
 };
 
-const likedPost = ref(false);
+
 
 const toggleLike = async (id) => {
   try {
-    const res = await axios.post(`/api/posts/${id}/like`);
+    const res = await axios.post(`/api/posts/detail/${id}/like/`);
     if (res.status === 201) {
-      likedPost.value =true;
       toast.success("Вы поставили лайк");
     } else {
-      likedPost.value = false;
+      toast.warning("Вы удалили лайк");
     } 
-    await getFeed();
+    getFeed();
 
   } catch (error) {
     toast.error("Произошла ошибка при постановке лайка");
@@ -78,9 +78,11 @@ const toggleLike = async (id) => {
   }
 };
 
+// add watch for togleLike and updated posts
 watchEffect(() => {
   getFeed();
-});
+})
+
 </script>
 
 <template>
@@ -101,13 +103,13 @@ watchEffect(() => {
         </p>
 
         <div class="mt-6 flex space-x-8 justify-around">
-          <RouterLink :to="{ name: 'friends', params: { id: user.id } }">
+        
             <p
               class="text-xs text-gray-500 transition-all duration-100 ease-in hover:text-gray-900 "
             >
               182 друзей
             </p>
-          </RouterLink>
+
 
           <p class="text-xs text-gray-500">120 постов</p>
         </div>
@@ -126,7 +128,7 @@ watchEffect(() => {
         class="bg-white border border-gray-200 rounded-lg"
         v-if="userStore.user.id === user.id"
       >
-        <form @submit.prevent="submitForm" method="post">
+        <form @submit.prevent="createPost" method="post">
           <div class="p-4">
             <textarea
               v-model="body"
@@ -147,16 +149,16 @@ watchEffect(() => {
         </form>
       </div>
 
+
       <div
         v-if="posts.length > 0"
-        class="p-4 bg-white border border-gray-200 rounded-lg"
-        v-for="post in posts"
-        :key="post.id"
+        v-for="(post, index) in posts"
+        :key="index"
       >
-        <PostCard @like="toggleLike" :post="post" />
+        <PostCard @like="toggleLike" :id="post.id" />
       </div>
 
-      <div class="p-4 bg-white border border-gray-200 rounded-lg" v-else>
+      <div v-else class="p-4 bg-white border border-gray-200 rounded-lg">
         <p>Посты не найдены</p>
       </div>
     </div>
