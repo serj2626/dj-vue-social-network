@@ -7,7 +7,7 @@ from .models import Like, Post, PostAttachment, Comment
 class CommentAdmin(admin.ModelAdmin):
     """Admin View for Comment"""
 
-    list_display = ("id", "created_at", "created_by", "get_body") 
+    list_display = ("id", "created_at", "author", "get_body") 
 
     def get_body(self, obj):
         return obj.body[:26]
@@ -26,11 +26,12 @@ class PostAdmin(admin.ModelAdmin):
     """Admin View for Post"""
 
     list_display = (
+        "get_body",
         "id",
         "created_at",
         "author",
         "likes_count",
-        "get_body",
+        
     )
 
     list_editable = ("author", "likes_count")
