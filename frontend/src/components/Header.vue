@@ -10,7 +10,7 @@ const userStore = useUserStore();
     <div class="max-w-7xl mx-auto">
       <div class="flex items-center justify-between">
         <div class="menu-left">
-          <p class="text-3xl app-title">ВКоннекте</p>
+          <p class="text-3xl app-title">Коннект</p>
           
         </div>
 
@@ -77,6 +77,6 @@ const userStore = useUserStore();
   @apply font-bold;
   color: transparent;
   background-clip: text;
-  background-image: linear-gradient(45deg, #d644ff, #b327c3, #7b269f, #7327c9);
+  background-image: linear-gradient(45deg, #d644ff, #b327c3, #9a6ae2, #7327c9);
 }
 </style>
