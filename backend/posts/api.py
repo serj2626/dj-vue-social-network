@@ -39,7 +39,6 @@ class PostListProfileView(APIView):
         id = self.kwargs["pk"]
         posts = Post.objects.filter(author=id)
         user = User.objects.get(id=id)
-
         posts_serializer = PostSerializer(posts, many=True)
         user_serializer = UserSerializer(user)
 
@@ -61,6 +60,8 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
         else:
             is_liked = False
         return Response({"post": PostSerializer(post).data, "is_liked": is_liked})
+
+        return super().get(request, *args, **kwargs)
 
     @extend_schema(summary="Редактирование поста по id")
     def put(self, request, *args, **kwargs):
