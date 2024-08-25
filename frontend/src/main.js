@@ -9,7 +9,7 @@ import Toast from "vue-toastification";
 import 'vue-toastification/dist/index.css';
 import globalComponents from "@/components/global";
 
-axios.defaults.baseURL = 'http://localhost:8000'
+axios.defaults.baseURL = import.meta.env.VITE_API_URL
 
 
 const app = createApp(App)
