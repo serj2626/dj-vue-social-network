@@ -7,7 +7,7 @@ from .models import Like, Post, PostAttachment
 class LikeAdmin(admin.ModelAdmin):
     """Admin View for Like"""
 
-    list_display = ("created_by", "created_at")
+    list_display = ("id", "created_by", "created_at")
 
 
 @admin.register(Post)
