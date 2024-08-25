@@ -53,7 +53,8 @@ const userStore = useUserStore();
         <div class="menu-right">
           <div v-if="userStore.user.isAuthenticated">
             <RouterLink :to="{ name: 'profile', params: { id: userStore.user.id } }">
-              <img src="https://i.pravatar.cc/40?img=70" class="rounded-full" />
+              <img :title="userStore.user.name" src="https://i.pravatar.cc/40?img=70" class="rounded-full hover:scale-125 
+              transition-all duration-200 hover:outline outline-2 outline-offset-2 outline-purple-600 ease-in" />
             </RouterLink>
           </div>
           <div v-else>
