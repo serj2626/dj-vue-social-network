@@ -103,13 +103,13 @@ watchEffect(() => {
         </p>
 
         <div class="mt-6 flex space-x-8 justify-around">
-        
+        <RouterLink :to="{ name: 'friends', params: { id: user.id } }">
             <p
               class="text-xs text-gray-500 transition-all duration-100 ease-in hover:text-gray-900 "
             >
               182 друзей
             </p>
-
+          </RouterLink>
 
           <p class="text-xs text-gray-500">120 постов</p>
         </div>
