@@ -8,7 +8,7 @@ defineProps({
 
 </script>
 <template>
-    <div class="mb-6 flex items-center justify-between">
+    <div class="mb-6 flex items-center justify-between ">
         <div class="flex items-center space-x-6">
             <img alt="avatar"  class="w-[40px] rounded-full">
             <p>
