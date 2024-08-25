@@ -5,9 +5,6 @@ import Trends from "../components/Trends.vue";
 import { useToast } from "vue-toastification";
 import { useUserStore } from "@/stores/user";
 import {
-  onBeforeUpdate,
-  onMounted,
-  onUpdated,
   reactive,
   ref,
   watchEffect,
@@ -33,11 +30,10 @@ async function getFeed() {
   try {
     const { data } = await axios.get(`/api/posts/profile/${route.params.id}/`);
     posts.value = data.posts;
-
+    console.log(data.posts);
     user.id = data.user.id;
     user.name = data.user.name;
     user.email = data.user.email;
-    console.log(user);
   } catch {
     toast.error("Произошла ошибка при загрузке постов");
   }
@@ -63,8 +59,26 @@ const submitForm = async () => {
   }
 };
 
+const likedPost = ref(false);
+
+const toggleLike = async (id) => {
+  try {
+    const res = await axios.post(`/api/posts/${id}/like`);
+    if (res.status === 201) {
+      likedPost.value =true;
+      toast.success("Вы поставили лайк");
+    } else {
+      likedPost.value = false;
+    } 
+    await getFeed();
+
+  } catch (error) {
+    toast.error("Произошла ошибка при постановке лайка");
+    console.log(error);
+  }
+};
+
 watchEffect(() => {
-  console.log("watchEffect");
   getFeed();
 });
 </script>
@@ -139,7 +153,7 @@ watchEffect(() => {
         v-for="post in posts"
         :key="post.id"
       >
-        <PostCard :post="post" />
+        <PostCard @like="toggleLike" :post="post" />
       </div>
 
       <div class="p-4 bg-white border border-gray-200 rounded-lg" v-else>
