@@ -39,7 +39,8 @@ class Like(models.Model):
     created_by = models.ForeignKey(
         User, related_name="likes", on_delete=models.CASCADE, verbose_name="автор"
     )
-    created_at = models.DateTimeField(verbose_name="дата создания", auto_now_add=True)
+    created_at = models.DateTimeField(
+        verbose_name="дата создания", auto_now_add=True)
 
     class Meta:
         verbose_name = "Лайк"
@@ -59,11 +60,13 @@ class Comment(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    body = models.TextField(blank=True, null=True, verbose_name="текст комментария")
+    body = models.TextField(blank=True, null=True,
+                            verbose_name="текст комментария")
     author = models.ForeignKey(
         User, related_name="comments", on_delete=models.CASCADE, verbose_name="автор"
     )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="дата создания")
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name="дата создания")
 
     def __str__(self):
         return f"Комментарий от {self.author}"
@@ -90,15 +93,19 @@ class Post(models.Model):
     )
 
     likes = models.ManyToManyField(Like, blank=True, verbose_name="лайки")
-    likes_count = models.IntegerField(verbose_name="количество лайков", default=0)
+    likes_count = models.IntegerField(
+        verbose_name="количество лайков", default=0)
 
-    comments = models.ManyToManyField(Comment, blank=True, verbose_name="комментарии")
+    comments = models.ManyToManyField(
+        Comment, blank=True, verbose_name="комментарии")
     comments_count = models.IntegerField(
         default=0, verbose_name="количество комментариев"
     )
 
-    created_at = models.DateTimeField(verbose_name="дата создания", auto_now_add=True)
-    author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(
+        verbose_name="дата создания", auto_now_add=True)
+    author = models.ForeignKey(
+        User, related_name="posts", on_delete=models.CASCADE, verbose_name="автор")
 
     class Meta:
         verbose_name = "Пост"
