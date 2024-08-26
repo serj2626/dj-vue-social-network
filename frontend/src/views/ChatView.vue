@@ -1,8 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import {useUserStore} from '@/stores/user';
-import { useToast } from 'vue-toastification';
-import axios from 'axios';
+import { ref, onMounted } from "vue";
+import { useUserStore } from "@/stores/user";
+import { useToast } from "vue-toastification";
+import axios from "axios";
+import UpdateOrDelModal from "@/components/chat/UpdateOrDelModal.vue";
 
 const store = useUserStore();
 const toast = useToast();
@@ -11,15 +12,15 @@ const body = ref("");
 const conversations = ref([]);
 
 const getConversations = async () => {
-    try{
-        const {data} = await axios.get("/api/chat/list/");
+    try {
+        const { data } = await axios.get("/api/chat/list/");
         conversations.value = data;
-
-    }catch(err){
+        console.log(data);
+    } catch (err) {
         console.log(err);
         toast.error("Произошла ошибка при загрузке чатов");
     }
-}
+};
 
 onMounted(() => {
     getConversations();
@@ -30,26 +31,20 @@ onMounted(() => {
         <div class="main-left col-span-1">
             <div class="p-4 bg-white border border-gray-200 rounded-lg">
                 <div class="space-y-4">
-                    <div 
-                        class="flex items-center justify-between"
-                        v-for="conversation in conversations"
-                        :key="conversation.id"
-                    >
+                    <div class="flex items-center justify-between" v-for="conversation in conversations"
+                        :key="conversation.id">
                         <div class="flex items-center space-x-2">
-                            <template
-                                v-for="user in conversation.users"
-                                v-bind:key="user.id"
-                            >
-                                <img alt="adasd" class="w-[40px] rounded-full">
+                            <div v-for="user in conversation.users" :key="user.id">
 
-                                <p 
-                                    class="text-xs font-bold"
-                                    v-if="user.id !== store.user.id"
-                                >{{ user.name }}</p>
-                            </template>
+                                <img v-if="user.id !== store.user.id" src="https://i.pravatar.cc/300?img=70" alt="adasd" class="w-[40px] rounded-full" />
+
+                                <p class="text-xs font-bold mt-2" v-if="user.id !== store.user.id">
+                                    {{ user.name }}
+                                </p>
+                            </div>
                         </div>
 
-                        <span class="text-xs text-gray-500">{{ conversation.modified_at_formatted }} назад</span>
+                        <span class="text-xs text-gray-500">{{ conversation.modified_at_formatted }} назад</span><hr>
                     </div>
                 </div>
             </div>
@@ -92,24 +87,22 @@ onMounted(() => {
                             </div>
                         </div>
                     </template>
-                </div> -->
+</div> -->
             </div>
 
             <div class="bg-white border border-gray-200 rounded-lg">
-                <form >
-                    <div class="p-4">  
-                        <textarea v-model="body" class="p-4 w-full bg-gray-100 rounded-lg" 
-                        placeholder="Что ты хочешь сказать?"></textarea>
+                <form>
+                    <div class="p-4">
+                        <textarea v-model="body" class="p-4 w-full bg-gray-100 rounded-lg"
+                            placeholder="Что ты хочешь сказать?"></textarea>
                     </div>
 
                     <div class="p-4 border-t border-gray-100 flex justify-between">
-                        <button class="inline-block py-4 px-6 bg-purple-600 text-white rounded-lg">Отправить</button>
+                        <UIButton :text="`Отправить`" />
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </template>
-<style scoped>
- 
-</style>
+<style scoped></style>
