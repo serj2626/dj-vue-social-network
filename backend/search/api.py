@@ -5,13 +5,14 @@ from rest_framework.decorators import (
     permission_classes,
 )
 from rest_framework.response import Response
-
+from drf_spectacular.utils import extend_schema
 from account.models import User
 from account.serializers import UserSerializer
 from posts.models import Post
 from posts.serializers import PostSerializer
 
 
+@extend_schema(summary="Поиск по постам и пользователям")
 @api_view(["POST"])
 def search(request):
     query = request.data.get("query")
