@@ -10,7 +10,7 @@ const router = useRouter();
 const form = reactive({
   email: "",
   name: "",
-  password1: "",
+  password: "",
   password2: "",
 });
 
@@ -18,19 +18,19 @@ const validateForm = () => {
   if (
     form.email === "" ||
     form.name === "" ||
-    form.password1 === "" ||
+    form.password === "" ||
     form.password2 === ""
   ) {
     toast.error("Обязательные поля не могут быть пустыми");
     return false;
   }
 
-  if (form.password1.length < 8) {
+  if (form.password.length < 8) {
     toast.error("Пароль должен содержать не менее 8 символов");
     return false;
   }
 
-  if (form.password1 !== form.password2) {
+  if (form.password !== form.password2) {
     toast.error("Пароли не совпадают");
     return false;
   }
@@ -41,14 +41,15 @@ const validateForm = () => {
 const submitForm = async () => {
   if (validateForm()) {
     try {
-      const res = await axios.post("/api/signup/", { ...form });
+      await axios.post("/api/register/", { ...form });
       toast.success("Аккаунт успешно создан");
       form.email = "";
       form.name = "";
-      form.password1 = "";
+      form.password = "";
       form.password2 = "";
       router.push({name: 'login'})
-    } catch {
+    } catch(err) {
+      console.log(err);
       toast.error("Ошибка при создании аккаунта");
     }
   }
@@ -102,7 +103,7 @@ const submitForm = async () => {
             <label>Пароль</label><br />
             <input
               type="password"
-              v-model="form.password1"
+              v-model="form.password"
               placeholder="Введите пароль"
               class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg"
             />
