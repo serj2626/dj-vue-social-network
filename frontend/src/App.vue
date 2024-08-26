@@ -29,7 +29,6 @@ onMounted(() => {
   <main class="px-8 py-6 bg-gray-100">
     <RouterView />
   </main>
-  <Toast />
 </template>
 
 <style scoped>
