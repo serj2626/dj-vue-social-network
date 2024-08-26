@@ -81,7 +81,7 @@ class Post(models.Model):
     """
     Модель Поста
     """
-    
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(verbose_name="текст поста", blank=True, null=True)
 
