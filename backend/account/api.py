@@ -8,9 +8,11 @@ from drf_spectacular.utils import extend_schema
 
 from .forms import SignupForm
 from .models import FriendshipRequest, User
-from .serializers import FriendshipRequestSerializer, UserSerializer
+from .serializers import FriendshipRequestSerializer, UserRegisterSerializer, UserSerializer
+from rest_framework import generics
 
 
+@extend_schema(tags=["Auth"], summary="Получение информации о пользователе")
 @api_view(["GET"])
 def me(request):
     return Response(
@@ -18,34 +20,17 @@ def me(request):
     )
 
 
-@api_view(["POST"])
-@authentication_classes([])
-@permission_classes([])
-def signup(request):
-    data = request.data
-    message = "success"
+class RegisterView(generics.CreateAPIView):
+    serializer_class = UserRegisterSerializer
+    queryset = User.objects.all()
 
-    form = SignupForm(
-        {
-            "email": data.get("email"),
-            "name": data.get("name"),
-            "password1": data.get("password1"),
-            "password2": data.get("password2"),
-        }
-    )
-
-    print("form", form.errors)
-
-    if form.is_valid():
-        form.save()
-        # Send verification email later!
-    else:
-        message = "error"
-
-    return Response({"message": message})
+    @extend_schema(summary="Регистрация пользователя")
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
 
 
+@extend_schema(tags=["Auth"], summary="Получение списка друзей пользователя")
 @api_view(["GET"])
 def friends(request, pk):
     user = User.objects.get(pk=pk)
@@ -68,6 +53,11 @@ def friends(request, pk):
         }
     )
 
+
+@api_view(['POST'])
+def logout_user(request):
+    request.user.auth_token.delete()
+    return Response({"message": "Успешный выход"}, status=200)
 
 
 @extend_schema(tags=["Auth"], summary="Отправка запроса в друзья")
