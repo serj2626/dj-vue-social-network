@@ -72,7 +72,7 @@ onMounted(submitForm);
         <UserCard v-for="user in allUsers" :key="user.id" :user="user" />
       </div>
 
-      <!-- <PostCard v-for="post in allPosts" :key="post.id" :post="post" /> -->
+      <PostCard v-for="post in allPosts" :key="post.id" :id="post.id" />
     </div>
 
     <div class="main-right col-span-1 space-y-4">
