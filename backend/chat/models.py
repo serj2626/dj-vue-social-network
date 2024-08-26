@@ -22,7 +22,7 @@ class Conversation(models.Model):
         return timesince(self.created_at)
 
     def __str__(self):
-        return f"Беседа с {self.id}"
+        return f"Беседа {self.users.first()} и {self.users.last()}"
 
     class Meta:
         verbose_name = "Беседа"
