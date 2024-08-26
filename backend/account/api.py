@@ -4,6 +4,7 @@ from rest_framework.decorators import (
     permission_classes,
 )
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 
 from .forms import SignupForm
 from .models import FriendshipRequest, User
@@ -44,6 +45,7 @@ def signup(request):
     return Response({"message": message})
 
 
+
 @api_view(["GET"])
 def friends(request, pk):
     user = User.objects.get(pk=pk)
@@ -67,6 +69,8 @@ def friends(request, pk):
     )
 
 
+
+@extend_schema(tags=["Auth"], summary="Отправка запроса в друзья")
 @api_view(["POST"])
 def send_friendship_request(request, id):
     user = User.objects.get(pk=id)
