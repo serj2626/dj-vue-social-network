@@ -1,13 +1,18 @@
-import './assets/main.css'
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+
 import axios from 'axios'
 import App from './App.vue'
 import router from './router'
 import Toast from "vue-toastification";
+
+import '../node_modules/flowbite-vue/dist/index.css'
 import 'vue-toastification/dist/index.css';
+import './assets/main.css'
+
 import globalComponents from "@/components/global";
+
+
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL
 
