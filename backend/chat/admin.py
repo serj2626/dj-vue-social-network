@@ -13,7 +13,6 @@ class ConversationAdmin(admin.ModelAdmin):
         "get_user_two",
         "created_at",
         "modified_at",
-
     )
 
     def get_user_one(self, obj):
@@ -21,6 +20,7 @@ class ConversationAdmin(admin.ModelAdmin):
 
     def get_user_two(self, obj):
         return obj.users.last()
+
     get_user_one.short_description = "Пользователь 1"
     get_user_two.short_description = "Пользователь 2"
 
@@ -39,6 +39,6 @@ class ConversationMessageAdmin(admin.ModelAdmin):
     )
 
     def get_body(self, obj):
-        return obj.body[:15] + '.....'
+        return obj.body[:15] + "....."
 
     get_body.short_description = "Текст сообщения"
