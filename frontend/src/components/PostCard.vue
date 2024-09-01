@@ -41,7 +41,6 @@ const getPost = async () => {
     post.comments_count = data.post.comments_count;
 
     isLiked.value = data.is_liked;
-    console.log(data);
   } catch (e) {
     toast.error("Произошла ошибка при загрузке поста");
   }
