@@ -40,6 +40,6 @@ app
         icon: true,
         rtl: false
     })
-    .use(router, axios)
+    .use(router)
     .mount('#app')
 
