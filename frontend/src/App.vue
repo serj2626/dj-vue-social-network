@@ -5,6 +5,7 @@ import Toast from "@/components/Toast.vue";
 import { useUserStore } from "@/stores/user";
 import { onMounted } from "vue";
 import Header from "@/components/Header.vue";
+import Footer from "./components/Footer.vue";
 
 const userStore = useUserStore();
 
@@ -24,14 +25,25 @@ onMounted(() => {
 </script>
 
 <template>
-  <Header />
+  <div class="app">
+      <Header />
 
   <main class="px-8 py-6 bg-gray-100">
     <RouterView />
   </main>
+  <footer>
+    <Footer  />
+  </footer>
+  </div>
+
 </template>
 
 <style scoped>
+.app{
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
 .router-link-exact-active {
   color: blueviolet;
 }
