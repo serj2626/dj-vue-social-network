@@ -1,8 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics
-from rest_framework.decorators import (
-    api_view,
-)
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from account.models import User
@@ -110,7 +108,7 @@ class MessageDetailView(generics.RetrieveUpdateDestroyAPIView):
     @extend_schema(summary="Редактирование сообщения по id")
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
-    
+
     @extend_schema(summary="Частичное редактирование сообщения по id")
     def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
