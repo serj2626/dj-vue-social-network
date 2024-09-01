@@ -5,8 +5,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from account.models import User
+from account.models import FriendshipRequest, User
 from account.serializers import UserSerializer
+from .service import get_status
 
 from .models import Comment, Like, Post
 from .serializers import PostDetailSerializer, PostSerializer
@@ -22,7 +23,8 @@ class PostListView(generics.ListCreateAPIView):
     permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
-        self.get_serializer(data=self.request.data, context={"request": self.request})
+        self.get_serializer(data=self.request.data, context={
+                            "request": self.request})
         serializer.is_valid(raise_exception=True)
         serializer.save(author=self.request.user)
         return Response(serializer.data, status=201)
@@ -43,10 +45,19 @@ class PostListProfileView(APIView):
         id = self.kwargs["pk"]
         posts = Post.objects.filter(author=id)
         user = User.objects.get(id=id)
+
+        status = get_status(self, user)
+
         posts_serializer = PostSerializer(posts, many=True)
         user_serializer = UserSerializer(user)
 
-        return Response({"posts": posts_serializer.data, "user": user_serializer.data})
+        return Response(
+            {
+                "posts": posts_serializer.data,
+                "user": user_serializer.data,
+                "status": status,
+            }
+        )
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -80,7 +91,8 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
 @extend_schema(summary="Создание комментария к посту")
 @api_view(["POST"])
 def post_create_comment(request, pk):
-    comment = Comment.objects.create(body=request.data.get("body"), author=request.user)
+    comment = Comment.objects.create(
+        body=request.data.get("body"), author=request.user)
 
     post = Post.objects.get(pk=pk)
     post.comments.add(comment)
