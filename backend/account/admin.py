@@ -7,7 +7,12 @@ from .models import FriendshipRequest, User
 class UserAdmin(admin.ModelAdmin):
     """Admin View for User"""
 
-    list_display = ("name", "email", "avatar", "is_superuser")
+    list_display = ("name","id",  "email", "avatar", "friends_count", "is_superuser")
+
+    def friends_count(self, obj):
+        return obj.friends.count()
+
+    friends_count.short_description = "Кол-во друзей"
 
 
 @admin.register(FriendshipRequest)
@@ -15,9 +20,9 @@ class FriendshipRequestAdmin(admin.ModelAdmin):
     """Admin View for FriendshipRequest)"""
 
     list_display = (
+        "created_by",
         "created_for",
         "created_at",
-        "created_by",
         "status",
     )
     # list_filter = ('',)
