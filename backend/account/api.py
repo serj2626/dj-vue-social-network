@@ -1,15 +1,16 @@
+from drf_spectacular.utils import extend_schema
+from rest_framework import generics
 from rest_framework.decorators import (
     api_view,
-    authentication_classes,
-    permission_classes,
 )
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
 
-from .forms import SignupForm
 from .models import FriendshipRequest, User
-from .serializers import FriendshipRequestSerializer, UserRegisterSerializer, UserSerializer
-from rest_framework import generics
+from .serializers import (
+    FriendshipRequestSerializer,
+    UserRegisterSerializer,
+    UserSerializer,
+)
 
 
 @extend_schema(tags=["Auth"], summary="Получение информации о пользователе")
@@ -24,37 +25,59 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
     queryset = User.objects.all()
 
-    @extend_schema(summary="Регистрация пользователя")
+    @extend_schema(tags=["Auth"], summary="Регистрация пользователя")
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
-
 
 
 @extend_schema(tags=["Auth"], summary="Получение списка друзей пользователя")
 @api_view(["GET"])
 def friends(request, pk):
     user = User.objects.get(pk=pk)
-    requests = []
-
-    if user == request.user:
-        requests = FriendshipRequest.objects.filter(
-            created_for=request.user, status=FriendshipRequest.SENT
-        )
-        requests = FriendshipRequestSerializer(requests, many=True)
-        requests = requests.data
-
     friends = user.friends.all()
 
     return Response(
         {
             "user": UserSerializer(user).data,
             "friends": UserSerializer(friends, many=True).data,
-            "requests": requests,
         }
     )
 
 
-@api_view(['POST'])
+@extend_schema(tags=["Auth"], summary="Получение списка подписчиков пользователя")
+@api_view(["GET"])
+def subscribers(request, pk):
+    user = User.objects.get(pk=pk)
+    subscribers = FriendshipRequest.objects.filter(
+        created_for=user, status=FriendshipRequest.SENT
+    )
+    subscribers = FriendshipRequestSerializer(subscribers, many=True).data
+    return Response(
+        {
+            "user": UserSerializer(user).data,
+            "subscribers": subscribers
+        }
+    )
+
+
+@extend_schema(tags=["Auth"], summary="Получение списка подписок пользователя")
+@api_view(["GET"])
+def subscriptions(request, pk):
+    user = User.objects.get(pk=pk)
+    subscriptions = FriendshipRequest.objects.filter(
+        created_by=user, status=FriendshipRequest.SENT
+    )
+    subscriptions = FriendshipRequestSerializer(subscriptions, many=True)
+    subscriptions = subscriptions.data
+    return Response(
+        {
+            "user": UserSerializer(user).data,
+            "subscriptions": subscriptions
+        }
+    )
+
+
+@api_view(["POST"])
 def logout_user(request):
     request.user.auth_token.delete()
     return Response({"message": "Успешный выход"}, status=200)
@@ -64,23 +87,15 @@ def logout_user(request):
 @api_view(["POST"])
 def send_friendship_request(request, id):
     user = User.objects.get(pk=id)
-    return Response({"message": "friendship request created"})
+    check1 = FriendshipRequest.objects.filter(
+        created_for=request.user, created_by=user)
+    check2 = FriendshipRequest.objects.filter(
+        created_for=user, created_by=request.user)
+    if check1 or check2:
+        return Response({"message": "Вы уже отправляли запрос на дружбу"}, status=400)
 
-    # check1 = FriendshipRequest.objects.filter(
-    #     created_for=request.user).filter(created_by=user)
-    # check2 = FriendshipRequest.objects.filter(
-    #     created_for=user).filter(created_by=request.user)
-
-    # if not check1 or not check2:
-    #     friendrequest = FriendshipRequest.objects.create(
-    #         created_for=user, created_by=request.user)
-
-    #     # notification = create_notification(
-    #     #     request, 'new_friendrequest', friendrequest_id=friendrequest.id)
-
-    #     return JsonResponse({'message': 'friendship request created'})
-    # else:
-    #     return JsonResponse({'message': 'request already sent'})
+    FriendshipRequest.objects.create(created_for=user, created_by=request.user)
+    return Response({"message": "Ваш запрос отправлен"}, status=200)
 
 
 # class SendFriendshipRequestView(CreateAPIView):
