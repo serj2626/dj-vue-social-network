@@ -36,6 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     friends = models.ManyToManyField(
         "self",
         verbose_name="друзья",
+        blank=True,
     )
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
