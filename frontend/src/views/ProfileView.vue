@@ -3,18 +3,12 @@ import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import { useToast } from "vue-toastification";
-import { FwbAlert } from 'flowbite-vue'
+import { FwbAlert } from "flowbite-vue";
 import { useUserStore } from "@/stores/user";
-import {
-  onMounted,
-  reactive,
-  ref,
-  watch,
-  watchEffect,
-} from "vue";
+import { onMounted, reactive, ref, watch, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import PostCard from "@/components/PostCard.vue";
-
+import ProfileCard from "@/components/ProfileCard.vue";
 
 const route = useRoute();
 const toast = useToast();
@@ -25,7 +19,12 @@ const user = reactive({
   id: "",
   name: "",
   email: "",
+  count_friends: 0,
+  count_posts: 0,
 });
+
+
+const status = ref('');
 
 const body = ref("");
 
@@ -36,13 +35,23 @@ async function getFeed() {
     user.id = data.user.id;
     user.name = data.user.name;
     user.email = data.user.email;
+    user.count_friends = data.user.count_friends;
+    user.count_posts = data.user.count_posts;
+
+    status.value = data.status;
+    console.log(data);
   } catch {
     toast.error("Произошла ошибка при загрузке постов");
   }
 }
 
 const sendFriendRequest = async () => {
-  toast.warning("Вы отправляете заявку в друзья");
+  try {
+    const res = await axios.post(`/api/friends/send-request/${user.id}`);
+    toast.success(res.data.message);
+  } catch (e) {
+    toast.error(e.response.data.message);
+  }
 };
 
 const createPost = async () => {
@@ -61,8 +70,6 @@ const createPost = async () => {
   }
 };
 
-
-
 const toggleLike = async (id) => {
   try {
     const res = await axios.post(`/api/posts/detail/${id}/like/`);
@@ -72,24 +79,23 @@ const toggleLike = async (id) => {
       toast.warning("Вы удалили лайк");
     }
     getFeed();
-
   } catch (error) {
     toast.error("Произошла ошибка при постановке лайка");
     console.log(error);
   }
 };
 
-// add watch for togleLike and updated posts
 watchEffect(() => {
   getFeed();
-})
-
+});
 </script>
 
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
-      <div class="p-4 bg-white border border-gray-200 text-center rounded-lg relative">
+      <ProfileCard :user="user"  />
+
+      <!-- <div class="p-4 bg-white border border-gray-200 text-center rounded-lg relative">
         <p v-if="userStore.user.id === user.id"
           class="absolute top-2 right-2 text-xs text-white bg-orange-600 p-2 rounded-md">
           Это Вы
@@ -101,17 +107,16 @@ watchEffect(() => {
 
         <div class="mt-6 flex space-x-8 justify-around">
           <RouterLink :to="{ name: 'friends', params: { id: user.id } }">
-            <p class="text-xs text-gray-500 transition-all duration-100 ease-in hover:text-gray-900 ">
-              182 друзей
+            <p class="text-xs text-gray-500 transition-all duration-100 ease-in hover:text-gray-900">
+              {{ user.count_friends }} друзей
             </p>
           </RouterLink>
 
-          <p class="text-xs text-gray-500">120 постов</p>
+          <p class="text-xs text-gray-500">{{ posts.length }} постов</p>
         </div>
 
-        <UIButton v-if="userStore.user.id !== user.id" class="w-full mt-6" :text="`Добавить в друзья`"
-          @click="sendFriendRequest" />
-      </div>
+        <UIButton v-if="userStore.user.id !== user.id" class="w-full mt-6" :text="status" @click="sendFriendRequest" />
+      </div> -->
     </div>
 
     <div class="main-center col-span-2 space-y-4">
@@ -130,7 +135,6 @@ watchEffect(() => {
           </div>
         </form>
       </div>
-
 
       <div v-if="posts.length > 0" v-for="(post, index) in posts" :key="index">
         <PostCard @like="toggleLike" :id="post.id" />
