@@ -17,7 +17,6 @@ const userStore = useUserStore();
 const user = ref({});
 const subscriptions = ref([]);
 
-
 async function getFriends() {
   try {
     const { data } = await axios.get(`api/subscriptions/${route.params.id}`);
@@ -46,14 +45,16 @@ watchEffect(() => {
         </p>
         <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full" />
 
-        <p>
-          <strong>{{ user.name }}</strong>
-        </p>
+        <RouterLink :to="{ name: 'profile', params: { id: user.id } }">
+          <p>
+            <strong>{{ user.name }}</strong>
+          </p>
+        </RouterLink>
 
         <div class="mt-6 flex space-x-8 justify-around">
-          <p class="text-xs text-gray-500">z друзей</p>
+          <p class="text-xs text-gray-500">{{ user.count_friends }} друзей</p>
           <p class="text-xs text-gray-500">
-           z подписчиков
+            {{ subscriptions.length }} подписок
           </p>
         </div>
       </div>
@@ -64,7 +65,7 @@ watchEffect(() => {
         class="p-4 bg-white border border-gray-200 rounded-lg"
         v-if="subscriptions.length"
       >
-        <h2 class="mb-6 text-xl">Мои подписки</h2>
+        <h2 class="mb-6 text-xl">Подписки</h2>
 
         <div
           class="p-4 text-center bg-gray-100 rounded-lg"
@@ -76,20 +77,29 @@ watchEffect(() => {
             class="mb-6 mx-auto rounded-full"
           />
 
-          <p>
-    
-          </p>
+          <RouterLink
+            :to="{ name: 'profile', params: { id: subscriber.created_for.id } }"
+          >
+            <p
+              class="hover:text-orange-700 transition-all duration-100 ease-in"
+            >
+              {{ subscriber.created_for.name }}
+            </p>
+          </RouterLink>
 
           <div class="mt-6 flex space-x-8 justify-around">
-            <p class="text-xs text-gray-500">ZZZ friends</p>
-            <p class="text-xs text-gray-500">ZZZ posts</p>
+            <p class="text-xs text-gray-500">
+              {{ subscriber.created_for.count_friends }} друзей
+            </p>
+            <p class="text-xs text-gray-500">
+              {{ subscriber.created_for.count_posts }} постов
+            </p>
           </div>
 
-
           <div class="mt-6 space-x-4">
-                        <UIAcceptButton :text="`Принять`" />
-                        <UIRejectButton :text="`Отклонить`" />
-                    </div>
+            <UIAcceptButton class="bg-slate-600" :text="`Отменить`" />
+            <UIRejectButton :text="`Удалить`" />
+          </div>
         </div>
 
         <hr />
