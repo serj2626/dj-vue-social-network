@@ -8,7 +8,10 @@ def get_path_for_post_image(instance, filename):
 def get_status(self, user):
     status = ""
 
-    if user in self.request.user.friends.all():
+    if user == self.request.user:
+        status = "Это Вы"
+
+    elif user in self.request.user.friends.all():
         status = "Ваш друг"
     elif self.request.user in user.friends.all():
         status = "Ваш друг"
