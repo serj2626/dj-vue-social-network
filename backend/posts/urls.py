@@ -10,12 +10,12 @@ from .api import (
 
 urlpatterns = [
     path("", PostListView.as_view(), name="post-list"),
-    path("detail/<uuid:pk>/", PostDetailView.as_view(), name="post-detail"),
+    path("detail/<int:pk>/", PostDetailView.as_view(), name="post-detail"),
     path(
-        "detail/<uuid:pk>/comment/create/",
+        "detail/<int:pk>/comment/create/",
         post_create_comment,
         name="post-create-comment",
     ),
-    path("detail/<uuid:pk>/like/", toggle_like, name="toggle-like-post"),
+    path("detail/<int:pk>/like/", toggle_like, name="toggle-like-post"),
     path("profile/<uuid:pk>/", PostListProfileView.as_view(), name="post-list-profile"),
 ]
