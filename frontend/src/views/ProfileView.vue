@@ -5,7 +5,7 @@ import Trends from "../components/Trends.vue";
 import { useToast } from "vue-toastification";
 import { FwbAlert } from "flowbite-vue";
 import { useUserStore } from "@/stores/user";
-import { onMounted, reactive, ref, watch, watchEffect } from "vue";
+import { onMounted, ref, watch, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import PostCard from "@/components/PostCard.vue";
 import ProfileCard from "@/components/ProfileCard.vue";
@@ -15,16 +15,9 @@ const toast = useToast();
 const userStore = useUserStore();
 
 const posts = ref([]);
-const user = reactive({
-  id: "",
-  name: "",
-  email: "",
-  count_friends: 0,
-  count_posts: 0,
-});
+const user = ref({});
 
-
-const status = ref('');
+const status = ref("");
 
 const body = ref("");
 
@@ -32,12 +25,7 @@ async function getFeed() {
   try {
     const { data } = await axios.get(`/api/posts/profile/${route.params.id}/`);
     posts.value = data.posts;
-    user.id = data.user.id;
-    user.name = data.user.name;
-    user.email = data.user.email;
-    user.count_friends = data.user.count_friends;
-    user.count_posts = data.user.count_posts;
-
+    user.value = data.user;
     status.value = data.status;
     console.log(data);
   } catch {
@@ -70,30 +58,16 @@ const createPost = async () => {
   }
 };
 
-const toggleLike = async (id) => {
-  try {
-    const res = await axios.post(`/api/posts/detail/${id}/like/`);
-    if (res.status === 201) {
-      toast.success("Вы поставили лайк");
-    } else {
-      toast.warning("Вы удалили лайк");
-    }
-    getFeed();
-  } catch (error) {
-    toast.error("Произошла ошибка при постановке лайка");
-    console.log(error);
-  }
-};
-
 watchEffect(() => {
   getFeed();
 });
+
 </script>
 
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
-      <ProfileCard :user="user"  />
+      <ProfileCard :user="user" />
 
       <!-- <div class="p-4 bg-white border border-gray-200 text-center rounded-lg relative">
         <p v-if="userStore.user.id === user.id"
@@ -120,16 +94,25 @@ watchEffect(() => {
     </div>
 
     <div class="main-center col-span-2 space-y-4">
-      <div class="bg-white border border-gray-200 rounded-lg" v-if="userStore.user.id === user.id">
+      <div
+        class="bg-white border border-gray-200 rounded-lg"
+        v-if="userStore.user.id === user.id"
+      >
         <form @submit.prevent="createPost" method="post">
           <div class="p-4">
-            <textarea v-model="body" class="p-4 w-full bg-gray-100 rounded-lg" placeholder="Что нового?"></textarea>
+            <textarea
+              v-model="body"
+              class="p-4 w-full bg-gray-100 rounded-lg"
+              placeholder="Что нового?"
+            ></textarea>
           </div>
 
           <div class="p-4 border-t border-gray-100 flex justify-between">
-            <a href="#"
-              class="inline-block py-4 px-6 bg-gray-600 hover:bg-gray-700 transition-all duration-100 ease-in text-white rounded-lg">Прикрепить
-              изображение</a>
+            <a
+              href="#"
+              class="inline-block py-4 px-6 bg-gray-600 hover:bg-gray-700 transition-all duration-100 ease-in text-white rounded-lg"
+              >Прикрепить изображение</a
+            >
 
             <UIButton :text="`Отправить`" />
           </div>
@@ -137,14 +120,12 @@ watchEffect(() => {
       </div>
 
       <div v-if="posts.length > 0" v-for="(post, index) in posts" :key="index">
-        <PostCard @like="toggleLike" :id="post.id" />
+        <PostCard  :id="post.id" />
       </div>
 
-      <div v-else class="">
-        <fwb-alert class="border-t-4 rounded-none" icon type="danger">
-          Посты отсутствуют.
-        </fwb-alert>
-      </div>
+      <fwb-alert v-else class="border-t-4 rounded-none" icon type="danger">
+        Посты отсутствуют.
+      </fwb-alert>
     </div>
 
     <div class="main-right col-span-1 space-y-4">
