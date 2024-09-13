@@ -15,7 +15,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    likes_count = serializers.IntegerField(source="likes.count", read_only=True)
+    likes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -24,14 +24,19 @@ class PostSerializer(serializers.ModelSerializer):
             "body",
             "author",
             "created_at_formatted",
+            "likes",
             "likes_count",
-            "comments_count",
         )
+
+    def get_likes_count(self, obj):
+        return obj.likes.count()
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
+    post_comments = CommentSerializer(many=True, read_only=True)
+    likes_count = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField() 
 
     class Meta:
         model = Post
@@ -40,7 +45,13 @@ class PostDetailSerializer(serializers.ModelSerializer):
             "body",
             "author",
             "created_at_formatted",
+            "post_comments",
             "likes_count",
-            "comments",
             "comments_count",
         )
+
+    def get_likes_count(self, obj):
+        return obj.likes.count()
+
+    def get_comments_count(self, obj):
+        return obj.post_comments.count()
