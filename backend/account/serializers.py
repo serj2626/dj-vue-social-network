@@ -51,6 +51,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class FriendshipRequestSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
+
+    created_for = UserSerializer(read_only=True)
+    
     class Meta:
         model = FriendshipRequest
         fields = ("id", "created_by", "created_for", "status")
