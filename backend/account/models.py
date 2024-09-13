@@ -71,7 +71,6 @@ class FriendshipRequest(models.Model):
         (REJECTED, "Rejected"),
     )
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_for = models.ForeignKey(
         User,
         related_name="received_friendshiprequests",
