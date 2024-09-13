@@ -1,16 +1,16 @@
 <script setup>
 import axios from "axios";
-import { onMounted, onUpdated, reactive, ref, watchEffect } from "vue";
+import { onBeforeUpdate, onMounted, onUpdated, reactive, ref, watch, watchEffect } from "vue";
 import { useToast } from "vue-toastification";
 
-const props = defineProps({
+const {id} = defineProps({
   id: {
     type: [Number, String],
     required: true,
   },
 });
 const showMenu = ref(false);
-const emit = defineEmits(["like"]);
+const emit = defineEmits([ "comment"]);
 
 const isLiked = ref(false);
 const toast = useToast();
@@ -29,7 +29,8 @@ const author = reactive({
 
 const getPost = async () => {
   try {
-    const { data } = await axios.get(`/api/posts/detail/${props.id}/`);
+    const { data } = await axios.get(`/api/posts/detail/${id}/`);
+    console.log(data);
     author.name = data.post.author.name;
     author.id = data.post.author.id;
     author.email = data.post.author.email;
@@ -46,12 +47,28 @@ const getPost = async () => {
   }
 };
 
-const togleLike = (id) => {
-  emit("like", id);
+
+
+const toggleLike = async (id) => {
+  try {
+    const res = await axios.post(`/api/posts/detail/${id}/like/`);
+    if (res.status === 201) {
+      toast.success("Вы поставили лайк");
+    } else {
+      toast.warning("Вы удалили лайк");
+    }
+    getPost();
+  } catch (error) {
+    toast.error("Произошла ошибка при постановке лайка");
+  }
 };
-watchEffect(() => {
+
+
+onMounted(() => {
   getPost();
 });
+
+
 </script>
 <template>
   <div class="post p-4 bg-white border border-gray-200 rounded-lg">
@@ -62,7 +79,10 @@ watchEffect(() => {
           class="w-[40px] rounded-full"
         />
 
-        <p @click="$router.push({ name: 'profile', params: { id: author.id } })" class="hover:underline  cursor-pointer">
+        <p
+          @click="$router.push({ name: 'profile', params: { id: author.id } })"
+          class="hover:underline cursor-pointer"
+        >
           <strong>{{ author.name }}</strong>
         </p>
       </div>
@@ -76,7 +96,7 @@ watchEffect(() => {
       <div class="flex space-x-6">
         <div class="flex items-center space-x-2">
           <svg
-            @click="togleLike(post.id)"
+            @click="toggleLike(post.id)"
             :class="{ active: isLiked, 'like-svg-active': isLiked }"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -113,9 +133,10 @@ watchEffect(() => {
             ></path>
           </svg>
 
-          <span 
-          @click="$router.push({ name: 'post', params: { id: post.id } })"
-          class="text-gray-500 text-xs hover:font-bold hover:text-gray-800 transition-all duration-100 ease-in cursor-pointer">
+          <span
+            @click="$router.push({ name: 'post', params: { id: post.id } })"
+            class="text-gray-500 text-xs hover:font-bold hover:text-gray-800 transition-all duration-100 ease-in cursor-pointer"
+          >
             {{ post.comments_count }} комментариев
           </span>
         </div>
