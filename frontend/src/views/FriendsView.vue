@@ -51,9 +51,9 @@ watchEffect(() => {
         </p>
 
         <div class="mt-6 flex space-x-8 justify-around">
-          <p class="text-xs text-gray-500">{{ friends.length }} друзей</p>
+          <p class="text-xs text-gray-500">{{ user.count_friends }} друзей</p>
           <p class="text-xs text-gray-500">
-           z подписчиков
+            {{ user.count_posts }} постов
           </p>
         </div>
       </div>
