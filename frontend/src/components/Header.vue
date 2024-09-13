@@ -6,8 +6,8 @@ const userStore = useUserStore();
 </script>
 
 <template>
-  <nav class="py-10 px-8 border-b border-gray-200">
-    <div class="max-w-7xl mx-auto">
+  <nav class="py-10  border-b border-gray-200">
+    <div class="max-w-7xl  mx-auto">
       <div class="flex items-center justify-between">
         <div class="menu-left">
           <p class="text-3xl app-title">Коннект</p>
