@@ -98,17 +98,50 @@ def send_friendship_request(request, id):
     return Response({"message": "Ваш запрос отправлен"}, status=200)
 
 
-# class SendFriendshipRequestView(CreateAPIView):
-#     queryset = FriendshipRequest.objects.all()
-#     serializer_class = FriendshipRequestSerializer
+@extend_schema(tags=["Auth"], summary="Подтверждение запроса в друзья")
+@api_view(["POST"])
+def accept_friendship_request(request,request_id, user_id):
+    user = User.objects.get(pk=user_id)
+    req = FriendshipRequest.objects.get(pk=request_id)
 
-#     def create(self, request, *args, **kwargs):
-#         pk = self.kwargs['pk']
-#         user = User.objects.get(pk=pk)
+    req.status = FriendshipRequest.ACCEPTED
+    req.save()
+    request.user.friends.add(user)
+    user.friends.add(request.user)
+    return Response({"message": "Запрос принят"}, status=200)
 
-#         check1 = FriendshipRequest.objects.filter(
-#             created_for=request.user).filter(created_by=user)
-#         check2 = FriendshipRequest.objects.filter(
-#             created_for=user).filter(created_by=request.user)
+# @extend_schema(tags=["Auth"], summary="Подтверждение запроса в друзья")
+# @api_view(["POST"])
+# def accept_friendship_request(request,request_id, user_id):
+#     user = User.objects.get(pk=user_id)
+#     check1 = FriendshipRequest.objects.filter(
+#         created_for=request.user, created_by=user)
+#     check2 = FriendshipRequest.objects.filter(
+#         created_for=user, created_by=request.user)
+#     if not check1:
+#         return Response({"message": "Вы не отправляли запрос на дружбу"}, status=400)
 
-#         if not check1 or not check2:
+#     check1.update(status=FriendshipRequest.ACCEPTED)
+#     request.user.friends.add(user)
+#     return Response({"message": "Запрос принят"}, status=200)
+
+
+@extend_schema(tags=["Auth"], summary="Отклонение запроса в друзья")
+@api_view(["POST"])
+def reject_friendship_request(request, id):
+    user = User.objects.get(pk=id)
+    check = FriendshipRequest.objects.filter(
+        created_for=request.user, created_by=user)
+    if not check:
+        return Response({"message": "Вы не отправляли запрос на дружбу"}, status=400)
+
+    check.update(status=FriendshipRequest.REJECTED)
+    return Response({"message": "Запрос отклонен"}, status=200)
+
+
+@extend_schema(tags=["Auth"], summary="Удаление запроса в друзья")
+@api_view(["DELETE"])
+def delete_friendship_request(request, id):
+    friends_request = FriendshipRequest.objects.get(pk=id)
+    friends_request.delete()
+    return Response({"message": "Запрос удален"}, status=204)
