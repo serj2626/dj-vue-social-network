@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Comment, Like, Post, PostAttachment
+from .models import Comment, Post, PostAttachment
 
 
 @admin.register(Comment)
@@ -15,32 +15,28 @@ class CommentAdmin(admin.ModelAdmin):
     get_body.short_description = "Текст комментария"
 
 
-@admin.register(Like)
-class LikeAdmin(admin.ModelAdmin):
-    """Admin View for Like"""
-
-    list_display = ("id", "created_by", "created_at")
-
-
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     """Admin View for Post"""
 
     list_display = (
+        'id',
         "get_body",
-        "id",
         "created_at",
         "author",
-        "likes_count",
-        "comments_count",
+        "get_count_likes",
     )
 
-    list_editable = ("author", "likes_count", "comments_count")
+    list_editable = ("author", )
 
     def get_body(self, obj):
         return obj.body[:10]
 
+    def get_count_likes(self, obj):
+        return obj.likes.all().count()
+
     get_body.short_description = "Текст поста"
+    get_count_likes.short_description = "Кол-во лайков"
 
 
 @admin.register(PostAttachment)
