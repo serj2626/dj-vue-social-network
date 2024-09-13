@@ -3,7 +3,8 @@ import { ref, onMounted } from "vue";
 import { useUserStore } from "@/stores/user";
 import { useToast } from "vue-toastification";
 import axios from "axios";
-import UpdateOrDelModal from "@/components/chat/UpdateOrDelModal.vue";
+import router from "@/router";
+
 
 const store = useUserStore();
 const toast = useToast();
@@ -34,9 +35,14 @@ onMounted(() => {
                     <div class="flex items-center justify-between" v-for="conversation in conversations"
                         :key="conversation.id">
                         <div class="flex items-center space-x-2">
-                            <div v-for="user in conversation.users" :key="user.id">
+                            <div v-for="user in conversation.users" :key="user.id"  @click="router.push({ name: 'profile', params: { id: user.id } })" class="cursor-pointer">
 
-                                <img v-if="user.id !== store.user.id" src="https://i.pravatar.cc/300?img=70" alt="adasd" class="w-[40px] rounded-full" />
+                                <img 
+                                
+                                                      v-if="user.id !== store.user.id" 
+                                src="https://i.pravatar.cc/300?img=70" 
+                                alt="adasd" 
+                                class="w-[40px] rounded-full" />
 
                                 <p class="text-xs font-bold mt-2" v-if="user.id !== store.user.id">
                                     {{ user.name }}
