@@ -42,6 +42,16 @@ const sendFriendRequest = async () => {
   }
 };
 
+const deletePost = async (id) => {
+  try {
+    await axios.delete(`/api/posts/detail/${id}/`);
+    toast.success("Пост успешно удален");
+    await getFeed();
+  } catch (error) {
+    toast.error("Произошла ошибка при удалении поста");
+  }
+};
+
 const createPost = async () => {
   if (body.value === "") {
     toast.error("Форма не может быть пустой");
@@ -51,7 +61,7 @@ const createPost = async () => {
       await axios.post("/api/posts/", { body: body.value });
       toast.success("Пост успешно создан");
       body.value = "";
-      await getFeed();
+      getFeed();
     } catch {
       toast.error("Произошла ошибка при создании поста");
     }
@@ -61,36 +71,12 @@ const createPost = async () => {
 watchEffect(() => {
   getFeed();
 });
-
 </script>
 
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
       <ProfileCard :user="user" />
-
-      <!-- <div class="p-4 bg-white border border-gray-200 text-center rounded-lg relative">
-        <p v-if="userStore.user.id === user.id"
-          class="absolute top-2 right-2 text-xs text-white bg-orange-600 p-2 rounded-md">
-          Это Вы
-        </p>
-        <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full" />
-        <p>
-          <strong>{{ user.name }}</strong>
-        </p>
-
-        <div class="mt-6 flex space-x-8 justify-around">
-          <RouterLink :to="{ name: 'friends', params: { id: user.id } }">
-            <p class="text-xs text-gray-500 transition-all duration-100 ease-in hover:text-gray-900">
-              {{ user.count_friends }} друзей
-            </p>
-          </RouterLink>
-
-          <p class="text-xs text-gray-500">{{ posts.length }} постов</p>
-        </div>
-
-        <UIButton v-if="userStore.user.id !== user.id" class="w-full mt-6" :text="status" @click="sendFriendRequest" />
-      </div> -->
     </div>
 
     <div class="main-center col-span-2 space-y-4">
@@ -120,7 +106,7 @@ watchEffect(() => {
       </div>
 
       <div v-if="posts.length > 0" v-for="(post, index) in posts" :key="index">
-        <PostCard  :id="post.id" />
+        <PostCard @delete="deletePost" :id="post.id" />
       </div>
 
       <fwb-alert v-else class="border-t-4 rounded-none" icon type="danger">

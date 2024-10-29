@@ -1,16 +1,21 @@
 <script setup>
 import axios from "axios";
-import { onBeforeUpdate, onMounted, onUpdated, reactive, ref, watch, watchEffect } from "vue";
+import { onMounted, reactive, ref, watchEffect } from "vue";
+import Confirm from "./Confirm.vue";
 import { useToast } from "vue-toastification";
 
-const {id} = defineProps({
+const { id } = defineProps({
   id: {
     type: [Number, String],
     required: true,
   },
 });
 const showMenu = ref(false);
-const emit = defineEmits([ "comment"]);
+const contentEdit = ref(false);
+const showConfirm = ref(false);
+const emit = defineEmits(["comment", "delete"]);
+
+const body = ref("");
 
 const isLiked = ref(false);
 const toast = useToast();
@@ -47,28 +52,29 @@ const getPost = async () => {
   }
 };
 
-
-
 const toggleLike = async (id) => {
   try {
-    const res = await axios.post(`/api/posts/detail/${id}/like/`);
-    if (res.status === 201) {
-      toast.success("Вы поставили лайк");
-    } else {
-      toast.warning("Вы удалили лайк");
-    }
+    await axios.post(`/api/posts/detail/${id}/like/`);
     getPost();
   } catch (error) {
     toast.error("Произошла ошибка при постановке лайка");
   }
 };
 
+const deletePost = async () => {
+  emit("delete", post.id);
+  showConfirm.value = false;
 
-onMounted(() => {
+}
+
+const cancel = () => {
+  contentEdit.value = false;
+  showMenu.value = false;
+};
+
+watchEffect(() => {
   getPost();
 });
-
-
 </script>
 <template>
   <div class="post p-4 bg-white border border-gray-200 rounded-lg">
@@ -90,7 +96,9 @@ onMounted(() => {
       <p class="text-gray-600">{{ post.created_at_formatted }} назад</p>
     </div>
 
-    <p>{{ post.body }}</p>
+    <p @change="body" class="overflow-hidden" :class="{ focus: contentEdit }" :contenteditable="contentEdit">
+      {{ post.body }}
+    </p>
 
     <div class="my-6 flex justify-between">
       <div class="flex space-x-6">
@@ -140,6 +148,17 @@ onMounted(() => {
             {{ post.comments_count }} комментариев
           </span>
         </div>
+        <div v-if="contentEdit">
+          <i class="fa-solid fa-check fa-lg" style="color: #1eff00"></i>
+        </div>
+
+        <div v-if="contentEdit">
+          <i
+            @click="cancel"
+            class="fa-solid fa-xmark fa-lg"
+            style="color: #d60505"
+          ></i>
+        </div>
       </div>
 
       <div class="relative">
@@ -158,20 +177,38 @@ onMounted(() => {
             d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
           ></path>
         </svg>
+
         <ul
           v-if="showMenu"
           class="text-gray-500 menu-list absolute right-9 top-0"
         >
-          <li>Удалить</li>
-          <li>Редактировать</li>
+          <li @click="showConfirm = true">Удалить</li>
+          <li @click="contentEdit = true">Редактировать</li>
           <hr class="my-2 border-gray-300" />
           <li class="hover:text-red-500" @click="showMenu = false">Отмена</li>
         </ul>
       </div>
     </div>
+
+    <Confirm
+      v-if="showConfirm"
+      @close="showConfirm = false"
+      @confirm="deletePost"
+    >
+      <p>Вы действительно хотите удалить пост?</p>
+    </Confirm>
   </div>
 </template>
 <style scoped>
+
+.text-wrap{
+    word-wrap: break-word
+}
+
+.focus {
+  @apply border-2 border-blue-500;
+}
+
 .like-svg {
   cursor: pointer;
   transition: all 0.1s ease-in-out;
